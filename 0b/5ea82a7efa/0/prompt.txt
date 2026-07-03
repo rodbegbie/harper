@@ -1,0 +1,1 @@
+Let's brainstorm adding YAML support to harper.  This will primarily be work in the harper-ls language server.
