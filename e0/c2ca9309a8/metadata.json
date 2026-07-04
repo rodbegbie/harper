@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.7.8",
+  "checkpoint_version": "branch-v1",
+  "checkpoint_id": "e0c2ca9309a8",
+  "strategy": "manual-commit",
+  "branch": "feature/yaml-support-design",
+  "checkpoints_count": 1,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/e0/c2ca9309a8/0/metadata.json",
+      "transcript": "/e0/c2ca9309a8/0/full.jsonl",
+      "compact_transcript": "/e0/c2ca9309a8/0/transcript.jsonl",
+      "content_hash": "/e0/c2ca9309a8/0/content_hash.txt",
+      "prompt": "/e0/c2ca9309a8/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 28479,
+    "cache_creation_tokens": 417456,
+    "cache_read_tokens": 48363501,
+    "output_tokens": 133028,
+    "api_call_count": 256
+  }
+}
