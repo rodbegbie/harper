@@ -1,0 +1,658 @@
+approved
+
+---
+
+1
+
+---
+
+<task-notification>
+<task-id>a3a8e05902f0250b9</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a3a8e05902f0250b9.output</output-file>
+<status>completed</status>
+<summary>Agent "Implement Task 1: add tree-sitter-yaml dep" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## DONE
+
+Task 1 is complete. I successfully added the `tree-sitter-yaml = "0.7.2"` dependency to `harper-comments/Cargo.toml` in alphabetical order with other tree-sitter packages, verified the workspace builds cleanly with `cargo check -p harper-comments`, and committed the changes with the exact message specified in the brief. The report file has been written to `.superpowers/sdd/task-1-report.md`.</result>
+<usage><subagent_tokens>30347</subagent_tokens><tool_uses>7</tool_uses><duration_ms>49484</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a876d30040bcdd89a</task-id>
+<tool-use-id>toolu_01Pgmm2pviFg4E5YsbpiiP7U</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a876d30040bcdd89a.output</output-file>
+<status>completed</status>
+<summary>Agent "Review Task 1 (spec + quality)" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Spec Compliance
+
+✅ **Spec compliant** — All three task steps completed correctly:
+- **Step 1:** Dependency added as `tree-sitter-yaml = "0.7.2"` in `harper-comments/Cargo.toml` at line 84 (diff), alphabetically placed after `tree-sitter-typescript` within the tree-sitter dependency group.
+- **Step 2:** Build verification run successfully: `cargo check -p harper-comments` exited with status 0. No compilation errors reported, consistent with brief expectation that unused-dependency lint is acceptable here.
+- **Step 3:** Commit message exactly matches specification: `chore(harper-comments): add tree-sitter-yaml dependency`
+
+⚠️ **Cannot verify from diff:** Whether the broader codebase will actually use `tree_sitter_yaml::LANGUAGE` in later tasks. This task is a dependency-only addition, so non-usage is expected and correct.
+
+## Strengths
+
+- **Minimal, focused change:** Only 2 files modified (Cargo.toml + Cargo.lock), 12 lines added total. No extraneous edits.
+- **Exact version matching:** Dependency pinned to the exact version (0.7.2) specified in the brief, with correct checksum in Cargo.lock.
+- **Alphabetical ordering:** Dependency placed in alphabetical order among tree-sitter packages (`typescript` → `yaml` → rest), maintaining readability and consistency with existing conventions.
+- **No new transitive dependencies:** tree-sitter-yaml brings in only `cc` and `tree-sitter-language`, both already in use by other tree-sitter packages in the list. No dependency bloat.
+- **Cargo.lock fully specified:** New package entry includes correct source URL, checksum, and dependency declarations, ensuring reproducible builds.
+- **Build succeeds:** Verified with `cargo check`; no unused-dependency warnings expected (as per brief).
+
+## Issues
+
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+None.
+
+#### Minor (Nice to Have)
+None.
+
+## Assessment
+
+**Task quality:** Approved
+
+**Reasoning:** Implementation is minimal, focused, and exactly matches the specification. Dependency placement follows existing patterns, build verification passed, commit hygiene is correct, and no unexpected side effects (e.g., new transitive dependencies) are introduced. Ready for downstream tasks.</result>
+<usage><subagent_tokens>41594</subagent_tokens><tool_uses>7</tool_uses><duration_ms>61446</duration_ms></usage>
+</task-notification>
+
+---
+
+Check status of Task 2 (YAML heuristics) implementer subagent; if done, review and dispatch task reviewer.
+
+---
+
+<task-notification>
+<task-id>aec44c52f1e1b4fe4</task-id>
+<tool-use-id>toolu_01Y8tS26tye1NFm7AZ4S9tFn</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/aec44c52f1e1b4fe4.output</output-file>
+<status>completed</status>
+<summary>Agent "Implement Task 2: YAML heuristics" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**DONE**
+
+Task 2 complete. Implemented YAML prose-scalar heuristics module with all 16 tests passing. The module provides the `is_prose_scalar()` entry point and three private helper functions to distinguish genuine prose (worth grammar-checking) from structural config data (identifiers, URLs, paths, version strings). Code transcribed verbatim from brief, committed to feature/yaml-support-design branch, and report written to `.superpowers/sdd/task-2-report.md`.</result>
+<usage><subagent_tokens>42796</subagent_tokens><tool_uses>12</tool_uses><duration_ms>177910</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a8b435c24eca7158a</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a8b435c24eca7158a.output</output-file>
+<status>completed</status>
+<summary>Agent "Review Task 2 (spec + quality)" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Spec Compliance
+
+✅ **Spec compliant** — Implementation precisely matches all requirements:
+
+- **Word count threshold**: Line 37-39 correctly implements `word_count &gt;= 3`
+- **URL/path/version detection**: Lines 42-72 implement detection of:
+  - HTTP/HTTPS/FTP URLs (lines 44-47) ✓
+  - File paths with `/` or `\` (line 49) ✓
+  - Semver-shaped values like `1.2.3` (lines 53-54, 64-72) ✓
+- **ALL_CAPS detection**: Lines 84-92 correctly identify all-uppercase text ✓
+- **snake_case detection**: Lines 105-108 require underscore + lowercase/digits only ✓
+- **kebab-case detection**: Lines 110-113 require hyphen + lowercase/digits only ✓
+- **No regex dependency**: Zero external crate imports; implementation uses only `std::` str/char methods ✓
+- **No invented heuristics**: Implementation includes only the three required heuristics ✓
+
+⚠️ **Cannot verify from diff**: Test execution output cannot be independently confirmed (implementer claims 16/16 passing, but tests are not re-run per instructions).
+
+---
+
+## Strengths
+
+1. **Clean separation of concerns** — Five focused functions with single responsibilities: `is_prose_scalar` (entry point), `looks_url_path_or_version`, `looks_like_identifier`, `is_snake_or_kebab_case`, `is_semver_like`
+
+2. **Comprehensive test coverage** — 16 tests exceed the 15-test minimum, covering:
+   - 4 accept cases (plain prose, multiline, hyphenated words, punctuation)
+   - 12 reject cases (word count &lt; 3, URLs, paths, semver, ALL_CAPS, snake_case, kebab-case, empty/whitespace)
+
+3. **Correct edge case handling** — Empty string and whitespace-only strings correctly rejected; prose with hyphens like "well-known" accepted (whitespace check in `is_snake_or_kebab_case` line 101 prevents false identifier detection)
+
+4. **Clear documentation** — Each function has doc comments explaining purpose and examples (e.g., lines 30-35, 61-63, 74-76, 97-99)
+
+5. **Good code structure** — Single-file module with private helpers and public entry point; module correctly registered in `lib.rs` line 22
+
+6. **No false positives for compound words** — Test `accepts_sentence_with_hyphenated_word` (line 185) ensures "well-known and widely-used approach" passes because `is_snake_or_kebab_case` returns false immediately on whitespace (line 101-102)
+
+---
+
+## Issues
+
+#### Critical (Must Fix)
+None identified.
+
+#### Important (Should Fix)
+None identified.
+
+#### Minor (Nice to Have)
+- **Redundant check**: Line 49 `!word.contains(' ')` is unnecessary since `split_whitespace()` already excludes spaces. This is harmless and makes intent explicit, so not worth changing.
+
+---
+
+## Assessment
+
+**Task quality:** Approved
+
+**Reasoning:** Implementation meets all spec requirements with no external dependencies, correctly implements the three mandatory heuristics (word count ≥3, URL/path/version detection, identifier-shaped rejection), includes comprehensive test coverage, and demonstrates good code organization with proper edge case handling.</result>
+<usage><subagent_tokens>54032</subagent_tokens><tool_uses>8</tool_uses><duration_ms>134001</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a5bbbd89286502859</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a5bbbd89286502859.output</output-file>
+<status>completed</status>
+<summary>Agent "Implement Task 3: YamlMasker" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE — YamlMasker implemented exactly per the brief in `harper-comments/src/masker.rs`: the stub was written first, tests confirmed failing (4 fail / 2 pass, matching the brief's expected pattern), the real `create_mask` combining comment + scalar `TreeSitterMasker` passes was implemented, all 6 `yaml_masker_tests` pass, and the full `harper-comments` suite (28 + 39 tests) passes with no regressions. The `is_ignored_comment` helper was extracted verbatim and `CommentMasker::new` updated to use it. No deviations from the brief's exact code were needed. Committed as `f9b68cc0` with the exact message from the brief. Report written to `/Users/rod/build/harper/.superpowers/sdd/task-3-report.md`.
+
+One minor note: `just format`'s `pnpm format` step failed because `pnpm` isn't installed in this environment — unrelated to this Rust-only change; `cargo fmt` itself ran fine and I re-verified tests pass post-format.</result>
+<usage><subagent_tokens>55221</subagent_tokens><tool_uses>14</tool_uses><duration_ms>114987</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ae0c05876efc8ee2c</task-id>
+<tool-use-id>toolu_01QxdJ6XFXXnF5fQjmn2QoDJ</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/ae0c05876efc8ee2c.output</output-file>
+<status>completed</status>
+<summary>Agent "Review Task 3 (spec + quality)" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Since tests reportedly compiled and passed (28+39), `tree_sitter::Language: Clone` is empirically confirmed — no need to chase further; it's a cheap Arc-wrapped handle per the tree-sitter crate's public API, consistent with the brief's own note that this is fine.
+
+### Spec Compliance
+
+- ✅ Spec compliant
+- ⚠️ Cannot verify from diff alone: whether `is_scalar_node`'s match against `plain_scalar`/`single_quote_scalar`/`double_quote_scalar`/`block_scalar` correctly corresponds to `tree-sitter-yaml`'s actual grammar node kinds — this depends on the grammar (Task 1's dependency), not visible in this diff.
+
+Verified specifically:
+
+- `YamlMasker::create_mask` (masker.rs:108-136) runs two independent `TreeSitterMasker::create_mask` passes — one filtered by `is_comment_node` (masker.rs:96-98), one by `is_scalar_node` (masker.rs:100-105) — then merges their allowed spans into one `Vec&lt;Span&lt;char&gt;&gt;`, sorts by start, and collects into a `Mask`. Matches brief exactly.
+- Comment spans (masker.rs:117-123) are filtered only by `!is_ignored_comment(&amp;text)` — no prose heuristic applied. Matches "comments always linted, only suppressed by ignore-family" constraint.
+- Scalar spans (masker.rs:125-131) are filtered only by `crate::yaml_heuristics::is_prose_scalar(&amp;text)`. Matches constraint.
+- `is_ignored_comment` (masker.rs:20-29) is a free function extracted verbatim from the old inline closure body; `CommentMasker::new` (masker.rs:58) now calls `Box::new(|text: &amp;String| is_ignored_comment(text))`. Behavior-preserving — confirmed by the implementer's report of unchanged `CommentMasker`/shebang-trimming test results (28 unit + 39 integration tests still passing), which this diff's context makes plausible since the closure body is a direct copy.
+- `YamlMasker::create_ident_dict(&amp;self, _source: &amp;[char]) -&gt; Option&lt;MutableDictionary&gt;` exists (masker.rs:90-92) with the brief-specified signature. It's a permanent stub returning `None` — this is not a shortfall: the brief's Step 3 explicitly says to "replace the stub `impl Masker for YamlMasker` block (keep the struct and `new`/`create_ident_dict` signatures)," i.e., `create_ident_dict` was deliberately left untouched for a later task.
+- No new dependencies added (diff touches only `masker.rs`).
+
+### Strengths
+
+- `is_ignored_comment` extraction is a clean, minimal, behavior-preserving refactor — same string literals, same order, no logic drift (masker.rs:20-29 vs. deleted closure at old lines 48-57).
+- Two-pass-then-merge structure is simple and directly traceable to the two independent semantic categories (comments vs. scalars) called out in the constraints.
+- Test suite covers the 4 required category combinations (comment kept, plain/double-quoted/block scalar prose kept, short-identifier and kebab-case scalars dropped) — reasonable coverage for a 6-test TDD checkpoint as specified by the brief.
+
+### Issues
+
+#### Critical (Must Fix)
+
+None.
+
+#### Important (Should Fix)
+
+- **Untested overlap/panic risk between the two mask passes.** `Mask`'s `FromIterator` (harper-core/src/mask/mod.rs:28-38) asserts `allowed.is_sorted_by(|a, b| a.end &lt;= b.start)` and panics otherwise ("Masker elements cannot overlap and must be sorted!"). `YamlMasker::create_mask` (masker.rs:133-135) sorts the combined comment+scalar spans only by `start` and never checks for overlap before calling `.collect()`. If tree-sitter-yaml ever nests a `comment` node inside a scalar node's byte range (e.g., an inline trailing comment token that the grammar attaches as a child of a `block_scalar`/mapping-pair rather than a pure sibling), this would panic at lint time on real-world YAML rather than degrade gracefully. No test in the new suite exercises a scalar with a same-line trailing comment (e.g. `key: value # note`), which is the most YAML-idiomatic case likely to stress this boundary. Given this is a task-scoped review and the two node-kind sets are structurally disjoint in typical tree-sitter grammars, this is not a certain bug, but it's an unverified assumption with a hard-panic failure mode and zero test coverage — worth at least one added test case before this is load-bearing in production linting.
+
+#### Minor (Nice to Have)
+
+- masker.rs:95-106 splits `is_comment_node`/`is_scalar_node` into a second `impl YamlMasker` block rather than the single block shown in the brief's snippet. Functionally identical, just a cosmetic deviation from "transcribed verbatim" as claimed in the report (task-3-report.md:36-37 says "transcribed verbatim... the real `impl Masker for YamlMasker`... were transcribed verbatim from the brief" — true for that block, but the `is_comment_node`/`is_scalar_node` helpers were technically moved into a separate `impl` block, a claim inaccuracy of no practical consequence).
+- `YamlMasker::create_mask` does not call `merge_whitespace_sep` on the final combined mask the way `TreeSitterMasker::create_mask` does internally on each single-kind mask (harper-tree-sitter/src/lib.rs:107). This is consistent with the brief's exact prescribed code, so not a deviation, but it does mean whitespace-adjacent comment+scalar spans across the two categories won't merge into one lintable chunk — a design characteristic inherited from the brief rather than an implementer choice.
+
+### Assessment
+
+**Task quality:** Approved
+**Reasoning:** Implementation matches the brief's prescribed code and constraints exactly, extraction of `is_ignored_comment` is behavior-preserving, and all specified tests pass. The one Important item (unverified overlap assumption between the two mask passes, no panic-boundary test) is a reasonable follow-up but not a blocker for this task-scoped gate since it mirrors the brief's exact specified code rather than an implementer deviation.</result>
+<usage><subagent_tokens>54905</subagent_tokens><tool_uses>10</tool_uses><duration_ms>214648</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ab20f02b95f812614</task-id>
+<tool-use-id>toolu_01ULpNLubSCK1fpd2hfPDTTu</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/ab20f02b95f812614.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix Task 3: add trailing-comment overlap test" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE
+
+Added `keeps_scalar_and_trailing_comment_on_same_line` to `yaml_masker_tests` in `/Users/rod/build/harper/harper-comments/src/masker.rs`, feeding `YamlMasker` `"description: This is a fairly long value # a trailing note\n"` and asserting both the scalar prose and the comment text appear in the joined allowed-span text. All 7 tests in `yaml_masker_tests` pass (`cargo test -p harper-comments yaml_masker_tests`), no panic — confirming the reviewer's analysis that tree-sitter produces disjoint sibling spans for scalar + same-line trailing comment.
+
+Committed as a new commit `b0d81be6` on `feature/yaml-support-design` (did not amend the prior `YamlMasker` commit), message: "test(harper-comments): cover trailing-comment adjacency in YamlMasker". Appended a fix report to `/Users/rod/build/harper/.superpowers/sdd/task-3-report.md`.</result>
+<usage><subagent_tokens>49868</subagent_tokens><tool_uses>10</tool_uses><duration_ms>54598</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a4571ce2a16c6a535</task-id>
+<tool-use-id>toolu_015QeTuMtan4sZmiun5E2GUh</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a4571ce2a16c6a535.output</output-file>
+<status>completed</status>
+<summary>Agent "Re-review Task 3 after fix" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>### Spec Compliance
+- ✅ Spec compliant: `YamlMasker` implementation matches the brief's Step 3 code exactly (comment pass + scalar pass, spans merged/sorted, `is_ignored_comment` extracted and reused by `CommentMasker`). Comments remain unconditionally linted (only filtered by the ignore-family check); scalars are filtered through `crate::yaml_heuristics::is_prose_scalar`. Both match global constraints.
+- ⚠️ Cannot verify from diff: whether tree-sitter-yaml's grammar genuinely produces disjoint `plain_scalar`/`comment` node ranges for every trailing-comment shape (only this one concrete input was exercised; the fix report's captured test run shows it passing with no panic, which is the strongest available evidence without re-running the suite myself).
+
+### Strengths
+- `is_ignored_comment` extraction is a faithful, behavior-preserving refactor (verified byte-for-byte against the original inline closure).
+- New test targets exactly the scenario the prior review flagged — a same-line `key: value # note` — and is inserted at the correct place in the existing test module, matching the file's established `allowed_text`/`.any(contains(...))` idiom.
+- The test's mere completion (no panic) is real evidence about `Mask::from_iter`'s non-overlap assertion for this input, which was the crux of the original finding.
+
+### Issues
+
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+- The new assertion is weaker than it needs to be for what it claims to verify. `joined.contains("This is a fairly long value")` and `joined.contains("a trailing note")` would **both still pass** even if `YamlMasker::create_mask` regressed to returning the entire unfiltered line as one span (e.g., `"description: This is a fairly long value # a trailing note"` kept whole) — that raw string contains both substrings too. This is precisely the vacuous-truth failure mode the task called out to check for. The test doesn't assert `texts.len() == 2`, doesn't assert the `"description:"` key is absent from the joined output, and doesn't assert the comment element starts with `#` — any of which would make it discriminate real span-splitting from a degenerate pass-through. As written, the test's real diagnostic power comes almost entirely from "did it panic," not from the substring assertions.
+
+#### Minor (Nice to Have)
+- Could strengthen with something like `assert_eq!(texts.len(), 2)` plus `assert!(!texts[0].contains("description"))` to directly confirm the key is dropped and the two allowed regions are distinct, rather than relying on panic-avoidance as the implicit overlap check.
+
+### Assessment
+**Task quality:** Approved
+**Reasoning:** The previously-flagged Important finding (no test for same-line trailing-comment span overlap) is now addressed at the level that matters most — a realistic `key: value # note` input is exercised and confirmed (via the fix report's captured run) not to panic, which is the actual risk the finding was about. The added assertions are weaker than ideal (they'd pass even under a whole-line-unfiltered regression) but this is a minor test-robustness gap, not a reason to block — the core span-overlap risk is genuinely exercised.</result>
+<usage><subagent_tokens>48014</subagent_tokens><tool_uses>3</tool_uses><duration_ms>74836</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a26d068a1f3e81eb3</task-id>
+<tool-use-id>toolu_01NRrjac9Rho8Yqu83CkcmGi</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a26d068a1f3e81eb3.output</output-file>
+<status>completed</status>
+<summary>Agent "Strengthen trailing-comment test assertions" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE
+
+Strengthened `keeps_scalar_and_trailing_comment_on_same_line` in `harper-comments/src/masker.rs` (lines ~211-236). Confirmed actual current output is `["This is a fairly long value", "# a trailing note"]`, then added assertions that would fail on a whole-line-passthrough regression:
+
+- `assert_eq!(texts.len(), 2)` — catches the single-merged-span regression directly.
+- `texts.iter().all(|t| !t.contains("description"))` — confirms the YAML key was excluded.
+- Partitioned `texts` into `comment_spans` (contain `#`) and `scalar_spans` (don't), asserted exactly one of each, that the comment starts with `#` after trimming and excludes the scalar prose, and that the scalar excludes the comment text.
+- Kept the original two weak `joined.contains(...)` checks at the end as minor sanity checks.
+
+Ran `cargo test -p harper-comments yaml_masker_tests` — all 7 tests pass. Ran `cargo fmt -p harper-comments` (no logic changes). Committed as new commit `3c58194a`, message: `test(harper-comments): strengthen trailing-comment span assertions`. Appended a fix-report entry to `/Users/rod/build/harper/.superpowers/sdd/task-3-report.md`.</result>
+<usage><subagent_tokens>48365</subagent_tokens><tool_uses>14</tool_uses><duration_ms>78728</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>acdd73dace9f44ead</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/acdd73dace9f44ead.output</output-file>
+<status>completed</status>
+<summary>Agent "Final re-review Task 3" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Clean — no diff, working tree matches HEAD exactly.
+
+### Spec Compliance
+✅ Spec compliant — the final `masker.rs` matches the brief's required struct/trait shapes, `is_ignored_comment` extraction, and the test module exceeds the 6-test minimum with the added trailing-comment case.
+
+### Strengths
+- The strengthened test now leads with `assert_eq!(texts.len(), 2)`, which is a hard structural check, not a substring check — this is the correct fix for the round-2 finding.
+- The comment/scalar partition (`filter(|t| t.contains('#'))` vs. its negation) combined with per-group length asserts (`== 1` each) rules out both a merge into one span and a split into more than two spans.
+- Content-boundary asserts (`!comment_spans[0].contains("This is a fairly long value")`, `!scalar_spans[0].contains("a trailing note")`) directly test for span-overlap bleed, which is exactly the failure mode round 1 was worried about.
+- I ran the real test suite and separately verified empirically (temporarily patching `YamlMasker::create_mask` in the working tree to `return vec![Span::new(0, source.len())]`, running the test, then restoring the file to its committed state and re-confirming `git diff` is empty): under that degenerate whole-line passthrough, `keeps_scalar_and_trailing_comment_on_same_line` fails at `assert_eq!(texts.len(), 2)` (left: 1, right: 2), and 3 other tests fail too. Reverting restored a byte-identical file (clean `git status`/`git diff`).
+
+### Issues
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+None. Both previously-flagged Important findings are resolved.
+
+#### Minor (Nice to Have)
+- The partition-by-`#` heuristic (`t.contains('#')`) is a little implicit — a comment-vs-scalar tag on the span (e.g. matching against known substrings directly rather than inferring role from presence of `#`) would be marginally more self-documenting, though it works correctly here since scalar text is guaranteed not to contain `#` in this fixture. Not worth another round.
+
+### Assessment
+**Task quality:** Approved
+**Reasoning:** Round 1's missing same-line trailing-comment test and round 2's weak `contains`-only assertions are both resolved — the new `assert_eq!(texts.len(), 2)` plus partitioned content-boundary checks empirically fail under a whole-line-passthrough regression (verified by direct experiment), and all 7 `yaml_masker_tests` pass.</result>
+<usage><subagent_tokens>55105</subagent_tokens><tool_uses>14</tool_uses><duration_ms>95456</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ad3c628e54a543875</task-id>
+<tool-use-id>toolu_01KZBWwuteFxNSjqFSTWmb4K</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/ad3c628e54a543875.output</output-file>
+<status>completed</status>
+<summary>Agent "Implement Task 4: register YAML in CommentParser" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE — Task 4 implemented and committed on `feature/yaml-support-design` (commit `d39c1679`).
+
+Changes to `harper-comments/src/comment_parser.rs`: added `LanguageMasker` enum dispatching between `CommentMasker` and `YamlMasker`, changed `CommentParser.inner` to use it, wired `"yaml"` into the tree-sitter language match and masker-selection logic, added `"yaml"|"yml"` to `filename_to_filetype`, and added the three brief-specified tests into the file's pre-existing `mod tests` block (per the brief's grep-first instruction).
+
+Verified TDD flow: tests failed before implementation (2/3 matched the `recognizes_yaml` filter; all 3 confirmed individually), passed after. Full `cargo test -p harper-comments` suite: 32 lib tests + 39 integration tests + 0 doc-tests, all green, no regressions. `cargo fmt` applied (cosmetic line-wrap only, re-verified green after).
+
+One minor deviation: placed `"yaml" =&gt; tree_sitter_yaml::LANGUAGE,` after `typescriptreact` rather than directly after `toml` as in the brief's snippet — purely cosmetic ordering, no functional difference. Full report at `/Users/rod/build/harper/.superpowers/sdd/task-4-report.md`.</result>
+<usage><subagent_tokens>58977</subagent_tokens><tool_uses>18</tool_uses><duration_ms>113570</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a1ff455775930aa25</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a1ff455775930aa25.output</output-file>
+<status>completed</status>
+<summary>Agent "Review Task 4 (spec + quality)" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>### Spec Compliance
+- ✅ Spec compliant
+
+Verified against `harper-comments/src/comment_parser.rs` diff:
+- `LanguageMasker` enum (lines 29-50) dispatches both `create_ident_dict` (34-41) and `Masker::create_mask` (43-50) to the wrapped `CommentMasker`/`YamlMasker` via exhaustive matches — correct dispatch, no missing arms.
+- `"yaml"` branch (line 93) constructs `LanguageMasker::Yaml(YamlMasker::new(language.into()))`, not `CommentMasker` — correct.
+- All other `language_id`s fall through the `_ =&gt;` arm (line 94) to `LanguageMasker::Comment(CommentMasker::new(language.into(), Self::node_condition))` — byte-identical construction to the pre-diff code, just re-wrapped in the enum. Existing languages unaffected.
+- `filename_to_filetype` maps `"yaml" | "yml" =&gt; "yaml"` (line 124), which flows into `new_from_language_id("yaml", ...)` — both extensions resolve correctly.
+- `CommentParser::create_ident_dict` body (line 59, `self.inner.masker.create_ident_dict(source)`) is textually unchanged from before the diff — no behavior change to the delegation pattern, only the type of `self.inner.masker` changed underneath it.
+
+**Deviation claim verified:** the implementer placed `"yaml" =&gt; tree_sitter_yaml::LANGUAGE,` after `"typescriptreact"` (diff line 76) rather than after `"toml"` per the brief's snippet. Confirmed both affected matches (`language_id` → `Language` match, lines 66-78, and `filename_to_filetype`, lines 114-127) end in a single catch-all `_ =&gt; return None` / `_ =&gt; return None` arm with no other wildcard or overlapping literal pattern preceding the `"yaml"` arm. Rust match arms on non-overlapping string literals have no ordering-dependent semantics here — the claim holds; this is genuinely cosmetic.
+
+### Strengths
+- The `LanguageMasker` enum is a minimal, tightly-scoped addition — two variants, two trivial forwarding methods, no leakage of YAML-specific logic into unrelated code paths.
+- Fallback arm (`_ =&gt; LanguageMasker::Comment(...)`) is a mechanical rewrap of the prior unconditional construction, which is the safest possible way to guarantee existing-language behavior is preserved.
+- New tests (comment_parser.rs:148-167) directly exercise the three constraints named in the brief (language-id lookup, `.yaml`, `.yml`) and were confirmed red→green per the report.
+- Report is transparent about the one deviation and about `cargo fmt` reformatting, rather than silently absorbing them.
+
+### Issues
+
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+None.
+
+#### Minor (Nice to Have)
+- `use crate::masker::YamlMasker;` / `use harper_core::Masker;` (comment_parser.rs:26-27) are appended after the existing `use crate::masker::CommentMasker;` rather than grouped with the other `harper_core::*` imports at the top of the file (lines 20-22). Cosmetic only; `just format`/rustfmt won't reorder `use` groups, so a human running `cargo fmt` later won't auto-fix this either. Not worth a fixup commit on its own.
+- No regression test explicitly asserts a pre-existing language (e.g. `"toml"`) still returns `Some` and still uses `CommentMasker` after this refactor — coverage for that relies on the pre-existing 39 `language_support` integration tests rather than a targeted unit test colocated with the new enum. Acceptable given the mechanical nature of the change, but worth noting for anyone auditing “existing languages unaffected” from this file alone.
+
+### Assessment
+**Task quality:** Approved
+**Reasoning:** The diff matches the brief's prescribed implementation almost verbatim, the one acknowledged deviation is genuinely inert (no wildcard precedes the new arm in either match), and the fallback path for existing languages is a direct rewrap with no semantic change.</result>
+<usage><subagent_tokens>45621</subagent_tokens><tool_uses>3</tool_uses><duration_ms>39574</duration_ms></usage>
+</task-notification>
+
+---
+
+Check status of Task 5 implementer subagent; if done, review and dispatch task reviewer.
+
+---
+
+Check status of Task 5 implementer subagent; if done, review and dispatch task reviewer.
+
+---
+
+<task-notification>
+<task-id>ab3c40d70840c3f00</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/ab3c40d70840c3f00.output</output-file>
+<status>completed</status>
+<summary>Agent "Implement Task 5: YAML fixture tests" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE — All three YAML fixtures (`clean.yaml`, `dirty.yaml`, `filtered_values.yaml`) produce their expected lint counts (0, 1, 0), and the full `harper-comments` suite (74 tests) passes with zero regressions. Committed as `f5c41cd1` on `feature/yaml-support-design`.
+
+Notable finding: the brief's original `clean.yaml`/`dirty.yaml` wording hit a real masker quirk — `TreeSitterMasker::create_mask` (in `harper-tree-sitter/src/lib.rs`) merges whitespace-adjacent scalar spans, which can silently weld a following YAML key's name onto the end of a prose block-scalar. Fixed by reordering `clean.yaml` so its `description:` block is the last key (nothing left to merge into it), and by verifying via `harper-cli` that the brief's suggested "handle"/"handles" mistake isn't actually caught by Harper's curated rules — swapped in a `PronounVerbAgreement` mistake ("They handles requests concurrently.") that reliably produces exactly 1 lint. Full details, iteration counts, and exact command output are in `/Users/rod/build/harper/.superpowers/sdd/task-5-report.md`.</result>
+<usage><subagent_tokens>95503</subagent_tokens><tool_uses>46</tool_uses><duration_ms>667279</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a431b205ef9613968</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a431b205ef9613968.output</output-file>
+<status>completed</status>
+<summary>Agent "Review Task 5 (spec + quality)" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>### Spec Compliance
+- ✅ Spec compliant: All three fixtures exist with the expected `create_test!` invocations (`clean.yaml, 0`), (`dirty.yaml, 1`), (`filtered_values.yaml, 0`) exactly as the diff shows in `harper-comments/tests/language_support.rs` (lines 30-33 of the diff). `filtered_values.yaml` matches the brief's draft verbatim. `dirty.yaml`'s and `clean.yaml`'s deviations from the brief's literal suggested content are both within the brief's own Step 5 allowance ("adjust the fixture wording... if the specific brief-suggested mistake doesn't work" / "adjust for clean/filtered too"), and both are documented with a specific, checkable rationale in the report.
+- Verified directly from the diff (not just the narrative): `clean.yaml` puts the `description: &gt;` block scalar as the last key in the file; `dirty.yaml` also has `description:` last and contains exactly one grammatical fault ("They handles requests concurrently" — pronoun/verb disagreement) inside the prose block, with the rest of the sentence ("This service handles...") being grammatically correct. This satisfies the global constraint that the 1 lint in dirty.yaml is a genuine prose-internal grammar mistake, not a structural/key issue.
+- ⚠️ Cannot verify from diff alone: actual lint counts at runtime (trusting the implementer's reported test run, per instructions not to re-run the suite).
+
+### Strengths
+- The implementer diagnosed a real, non-obvious masker interaction rather than papering over a flaky test, and clearly separated "what I built" from "what's pre-existing and out of scope."
+- The report is honest about the brief's suggested grammar mistake not actually firing under Harper's curated rules, and shows the verification method (isolated `harper-cli` runs) rather than asserting it blindly.
+- Minimal, scoped diff — only the three new fixtures and the test-registration lines; no source changes.
+
+### Issues
+
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+- **The whitespace-merge behavior is not a narrow quirk — it's a structural gap that reaches ordinary multi-key YAML.** I traced `Mask::merge_whitespace_sep` (`harper-core/src/mask/mod.rs:77-105`): it merges any two adjacent "allowed" spans whose separating text is composed *only* of whitespace/newline characters, and it recurses until no more merges are possible. `YamlMasker::create_mask` (`harper-comments/src/masker.rs:119-147`) builds its scalar-span pool from `TreeSitterMasker` matching node kind `plain_scalar | single_quote_scalar | double_quote_scalar | block_scalar` — with no distinction between a mapping's *key* token and its *value* token, since unquoted keys are themselves `plain_scalar` nodes. In ordinary block-mapping YAML, a value's node ends at end-of-line and the very next scalar node is the *next key*, separated only by a newline — exactly the "whitespace-only" condition that triggers a merge. So this isn't limited to "a block scalar happens to be the last key in the file"; it will fire for **any** prose-bearing scalar value (block or plain) immediately followed by another key, which is the common case in real-world YAML (config files rarely put their prose field conveniently last). The task's `clean.yaml` false-positive (a following `tags:` key welding onto the prose block and tripping `Capitalization::SentenceCapitalization`) is a visible symptom of this, not a one-off. Left unaddressed, this can equally produce false negatives (a real grammar mistake near the end of a prose value gets merged with unrelated key text, changing sentence boundaries the grammar checker sees) as well as further false positives in other documents. This is correctly attributed to Task 3/4 and correctly out of scope for Task 5 to fix, but it deserves a tracked follow-up rather than being left as an implicit fixture-ordering workaround — otherwise the next YAML fixture author (or real user) will hit the same trap without knowing why.
+
+#### Minor (Nice to Have)
+- `dirty.yaml`'s explanatory comment ("A configuration file with a single deliberate grammar mistake") together with a two-sentence description block might read as slightly indirect for a fixture whose whole point is a single targeted error — a code comment noting *which* sentence carries the deliberate mistake would help future maintainers avoid re-introducing the same masker trap when editing this fixture.
+
+### Assessment
+**Task quality:** Approved
+**Reasoning:** The fixtures and test wiring meet the brief and the global 0/0/1 lint-count constraints, and the implementer's deviations from the brief's literal example text are both permitted by the brief and well-justified. The named risk is real, not narrow — the whitespace-merge in `TreeSitterMasker`/`Mask::merge_whitespace_sep` generically welds adjacent scalar (key or value) spans across ordinary block-mapping boundaries, not just in the one fixture layout encountered here — but it is correctly identified as pre-existing Task 3/4 scope, so it's flagged Important rather than Critical for this task.</result>
+<usage><subagent_tokens>49312</subagent_tokens><tool_uses>11</tool_uses><duration_ms>111909</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ad1b4d8bcced061c4</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/ad1b4d8bcced061c4.output</output-file>
+<status>completed</status>
+<summary>Agent "Fix YamlMasker key/value scalar confusion" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE
+
+Summary: Fixed `YamlMasker::is_scalar_node` in `harper-comments/src/masker.rs` to exclude mapping keys via a new `is_mapping_key` helper (walks up to the nearest `block_mapping_pair`/`flow_pair` ancestor and compares start bytes). Added two regression tests (`does_not_bleed_prose_value_into_following_key`, `keeps_multi_word_quoted_key_out_of_lint_pass`) to the existing `yaml_masker_tests` module. All 9 yaml_masker tests, all 3 fixture `lints_yaml_*` tests, and the full `harper-comments` suite (34 unit + 42 integration + 0 doc-tests) pass with zero regressions. Fixture files (`clean.yaml`/`dirty.yaml`) were left with their existing "prose key last" ordering since it's no longer load-bearing but reordering wasn't required. Committed as `913b1fe5` on `feature/yaml-support-design`. Report written to `/Users/rod/build/harper/.superpowers/sdd/task-3-fix-report.md`. Note: `just format`'s `pnpm format` step failed since pnpm isn't installed in this environment, but `cargo fmt` ran fine and touched only the intended file.</result>
+<usage><subagent_tokens>59997</subagent_tokens><tool_uses>17</tool_uses><duration_ms>112538</duration_ms></usage>
+</task-notification>
+
+---
+
+Check status of the YamlMasker key-exclusion fix review subagent; if approved, mark Task 5 complete and proceed to Task 6.
+
+---
+
+<task-notification>
+<task-id>aebee38aff23df091</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/aebee38aff23df091.output</output-file>
+<status>completed</status>
+<summary>Agent "Review YamlMasker key-exclusion fix" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>### Correctness Verification
+
+I traced `is_mapping_key` against the actual tree-sitter-yaml grammar (`~/.cargo/registry/.../tree-sitter-yaml-0.7.2/grammar.js`), not just the assumed structure.
+
+**Simple `name: foo` (implicit mapping pair, the common case):**
+`block_mapping_pair` is produced by `_r_blk_imp_itm: seq(field('key', $._r_sgl_flw_val_blk), $._blk_imp_itm_tal)`. The `key` field wraps the scalar directly with no preceding token, so `key`'s wrapper chain (`flow_node`/`block_node` → `plain_scalar`) all share the same `start_byte` as the leaf. The value (after `_blk_imp_itm_tal`, i.e. after `key:`) always starts strictly later. So `n.start_byte() == pair.start_byte()` is `true` for the key leaf and `false` for the value leaf — correct for this case, which covers the overwhelming majority of real-world YAML (frontmatter, CI config, etc.).
+
+**Nested/value-is-a-structure case:** the walk returns at the *nearest* enclosing `block_mapping_pair`/`flow_pair`, so a scalar inside a nested pair (e.g. `a:\n  b: c`) is compared against `b: c`'s own pair, not the outer `a:` pair. No misfire from outer-ancestor confusion. I also checked sequence-of-mappings (`- name: foo`) and flow mappings (`{a: {b: c}}`) — same reasoning holds, no false positives on values.
+
+**Confirmed edge-case gaps (false negatives — keys wrongly classified as values, i.e. the original bug persists for these forms):**
+1. **Anchored/tagged keys** (`&amp;anchor key: value`, `!!str key: value`). Grammar: the key field can resolve through `_r_prp_val` (`flow_node`), which allows `anchor`/`tag` node(s) *before* the scalar within the same field. There, `flow_node.start_byte()` == anchor's start, but the scalar leaf's `start_byte()` is later (after the anchor). `is_mapping_key` compares the leaf's start to the pair's start — mismatch — so the key is wrongly treated as a non-key and re-enters the prose candidate pool.
+2. **Explicit-key syntax** (`? key\n: value`). Grammar: `_r_blk_key_itm: seq($._r_blk_key_bgn, optional(field('key', ...)))` — the `?` indicator (`_r_blk_key_bgn`) is *not* part of the `key` field, and `block_mapping_pair`'s start byte is the `?` token's position, not the key scalar's. Same mismatch, same misfire.
+
+Neither case is a *new* regression — both were already broken pre-fix (all scalars were candidates) — but the fix's stated goal ("keys are never treated as prose scalars") is not fully achieved for these two valid YAML constructs. They're rare in the frontmatter/config-style YAML harper-comments typically parses, so I don't consider this fix-blocking, but it is an incomplete fix relative to its own doc comment's claim ("the key is always the first token in a mapping pair").
+
+I found no realistic path for a legitimate **value** to be misidentified as a key (false positive) — value fields always start strictly after the `key:`/`?`/`:` marker token in every grammar production I checked.
+
+### Regression test verification
+
+Traced `create_mask`'s pipeline: `TreeSitterMasker::create_mask` collects **all** `is_scalar_node`-matching byte spans (pre-fix: unconditionally all `plain_scalar`/quote/block scalars, keys included) and merges adjacent spans separated only by whitespace *before* `is_prose_scalar` ever runs (that filter is applied afterward, in `YamlMasker::create_mask`, line 157-163).
+
+For `does_not_bleed_prose_value_into_following_key`'s input, pre-fix candidate spans for `...here\ntags: something` would be `"...here"` and `"tags"`, separated only by `\n` — these merge into one span `"...here\ntags"` before the prose heuristic runs. That merged span, containing a long sentence, plausibly passes `is_prose_scalar` and gets kept whole — which is exactly what the test's second assertion (`!texts.iter().any(|t| t.contains("here") &amp;&amp; t.contains("tags"))`) is built to catch. This is a real, non-tautological regression test.
+
+For `keeps_multi_word_quoted_key_out_of_lint_pass`, pre-fix the quoted key `"a fairly long key name"` was a bare scalar candidate (nothing to merge with, at file start), and being a 5-word phrase would plausibly pass `is_prose_scalar`'s heuristic and get kept, making `texts` non-empty — failing `assert!(texts.is_empty())`. This is also a genuine regression test, and it specifically targets a scenario the byte-based `is_mapping_key` check handles correctly (no anchor/tag/explicit-key involved here).
+
+### Spec Compliance
+
+✅ Fix addresses the reported bug for the common case (implicit `key: value` / `key:` flow pairs, unquoted and quoted).
+❌ Incomplete: anchored/tagged keys and explicit `?`-key mapping syntax still misclassify the key as a non-key, reproducing the original whitespace-merge bug for those forms.
+
+### Issues
+
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+- `is_mapping_key` (harper-comments/src/masker.rs:125-137) misses anchored/tagged mapping keys (e.g. `&amp;a name: foo`) and explicit-indicator keys (`? key\n: value`) because the byte-equality check assumes the key field's wrapper chain starts exactly where the pair starts, which is false when a `properties` node (anchor/tag) or the `?` indicator precedes the key scalar within the field. For these forms the original bug (value/next-key bleed via whitespace merge) still reproduces. Worth a follow-up fix (e.g. compare against the `key` field's node via `parent.child_by_field_name("key")` rather than raw byte-equality against the pair) plus regression tests for both forms, since these are valid, if uncommon, YAML.
+
+#### Minor (Nice to Have)
+- The doc comment on `is_mapping_key` states unconditionally "the key is always the first token in a mapping pair" — true only for the plain implicit form; worth a caveat noting the anchor/explicit-key gap so a future reader doesn't assume full coverage.
+
+### Assessment
+**Fix quality:** Approved
+**Reasoning:** The fix correctly solves the reported bug for the dominant real-world case (implicit `key: value`/`flow_pair` mappings, quoted or unquoted, with or without prose values), and both new tests are genuine regression tests that would fail under the pre-fix code, verified by tracing the actual merge-then-filter pipeline. The remaining gap (anchored/tagged/explicit-indicator keys) is a narrow, pre-existing limitation rather than something newly broken by this diff, so it doesn't block approval, but it's worth a tracked follow-up.</result>
+<usage><subagent_tokens>64561</subagent_tokens><tool_uses>14</tool_uses><duration_ms>417558</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>aebee38aff23df091</task-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/aebee38aff23df091.output</output-file>
+<status>completed</status>
+<summary>Agent "Review YamlMasker key-exclusion fix" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Noted — that background lookup has already completed and its findings are incorporated into the review I just delivered above (the grammar analysis in the "Correctness Verification" section). No further action needed on it.</result>
+<usage><subagent_tokens>66740</subagent_tokens><tool_uses>14</tool_uses><duration_ms>534296</duration_ms></usage>
+</task-notification>
+
+---
+
+Check status of Task 6 implementer subagent (final verification); if done, review its output and proceed to final whole-branch review.
+
+---
+
+<task-notification>
+<task-id>a4e3bc5168eb4e213</task-id>
+<tool-use-id>toolu_01HQLLbxD14AzNeyLJySs2e8</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a4e3bc5168eb4e213.output</output-file>
+<status>completed</status>
+<summary>Agent "Implement Task 6: verification and formatting" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>DONE — All verification passed. `cargo fmt --all` made no changes (tree already clean); `just format`'s pnpm step failed as expected/known and unrelated to this Rust change. `just test-rust` ran the full workspace suite with zero failures across all crates (including the new harper-comments YAML support tests and unaffected TOML/Rust/Lua fixtures). The harper-cli smoke test on `harper-comments/tests/language_support_sources/dirty.yaml` produced exactly 1 lint (`Agreement::PronounVerbAgreement` on "They handles"), correctly ignoring the comment line and YAML keys/values — matching the adjusted expectation noted in the brief (fixture uses "They handles" rather than the plan's original "handle"/"handles" wording). No formatting changes meant no commit was needed for Step 4. Full report written to `/Users/rod/build/harper/.superpowers/sdd/task-6-report.md`.</result>
+<usage><subagent_tokens>44583</subagent_tokens><tool_uses>12</tool_uses><duration_ms>351537</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a212ba99b4067b73f</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/cd32b274-2c75-4ca6-923c-e8405708b691/tasks/a212ba99b4067b73f.output</output-file>
+<status>completed</status>
+<summary>Agent "Final whole-branch code review" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have everything I need. Both load-bearing claims are verified against the actual source. Here is my review.
+
+---
+
+## Review: YAML linting support for harper-comments
+
+### Strengths
+
+- **Clean architectural fit.** The two-pass `YamlMasker` (comment nodes + scalar nodes) reuses the exact `TreeSitterMasker` + `Mask` plumbing every other language uses. No new abstraction was invented where the existing one sufficed.
+- **Backend routing claim confirmed.** `harper-ls/src/backend.rs:343-344` routes through `_ if ts_parser.is_some() =&gt;` *before* any language-specific arm, so registering `"yaml"` in `CommentParser` is genuinely sufficient — no `backend.rs` change needed, exactly as the plan asserted. `backend.rs` is untouched by the diff.
+- **`LanguageMasker::Comment` is behaviorally identical to the old path.** The enum arm constructs `CommentMasker::new(language.into(), Self::node_condition)` — byte-for-byte the previous construction. Backward-compat risk for non-YAML files is effectively zero, as claimed.
+- **Good DRY cleanup.** Extracting `is_ignored_comment` out of the inline closure and sharing it between `CommentMasker` and `YamlMasker` is a legitimate reuse win, not gratuitous churn.
+- **Strong regression tests.** `does_not_bleed_prose_value_into_following_key` and `keeps_multi_word_quoted_key_out_of_lint_pass` both discriminate the real key/value bug that was fixed, and `keeps_scalar_and_trailing_comment_on_same_line` now asserts exact span count (2), content boundaries, and key-exclusion — the earlier weak-assertion finding is properly resolved.
+- Non-goals are genuinely absent from the diff: no `default_config.json`, no `harper.js`/WASM, no front-matter handling, no per-key config.
+
+### Issues
+
+#### Critical (Must Fix)
+None.
+
+#### Important (Should Fix)
+None that block merge. The two-pass-then-`collect()` design has one theoretical failure mode worth understanding (below), but I judge it non-blocking.
+
+#### Minor (Nice to Have)
+
+1. **`Mask::from_iter` panics on overlap; the combined-span collect relies on YAML grammar never nesting a comment inside a scalar.** `YamlMasker::create_mask` does `spans.into_iter().collect()`, and `FromIterator for Mask` (`harper-core/src/mask/mod.rs:34`) *asserts* `a.end &lt;= b.start` — it panics rather than degrades if any comment span and scalar span overlap. This is safe in practice: YAML block scalars swallow `#` as literal content (so no comment node forms inside them) and trailing comments are always whitespace-separated from the preceding scalar. So overlap is structurally impossible for well-formed YAML, and this is a *language-server* code path where a panic on a user's file would be worse than in a test. There's no explicit test proving a `#`-bearing block-scalar line doesn't produce an overlapping comment node. Consider either a defensive `merge_whitespace_sep`/dedup instead of asserting `collect`, or a one-line fixture with `notes: |` containing a `# ...` line to lock the grammar's behavior in.
+
+2. **`filtered_values.yaml` doesn't exercise the URL/path/version/identifier heuristics end-to-end.** Every value in that fixture is a *single* whitespace-token (`enabled`, `production-ready-config`, `2.10.4`, `https://…`), so the `word_count &gt;= 3` gate rejects them all before the URL/semver/identifier predicates ever run. The predicates *are* covered at the unit level in `yaml_heuristics.rs` (e.g. `please upgrade to 1.2.3 today now`), so this is a fixture-strength nit, not a coverage hole — but the end-to-end file gives a false sense that it's testing those specific rejections.
+
+3. **Dead sub-condition in `looks_url_path_or_version`.** `(word.contains('/') || word.contains('\\')) &amp;&amp; !word.contains(' ')` — `word` comes from `split_whitespace()` and can never contain a space, so `!word.contains(' ')` is always true. Harmless, but confusing to a future reader; drop it.
+
+4. **No end-to-end fixture for multi-line prose in sequences or deeply nested mappings.** `clean.yaml`'s sequence items are all 1-word kebab values, so a *prose* sequence item is never masked in a fixture. Low risk (unit tests cover the heuristic; the masker is structure-agnostic), just an untested shape.
+
+5. **Two separate `impl YamlMasker` blocks** (one for `new`/`create_ident_dict`, one for the node predicates). Purely cosmetic.
+
+### Recommendations
+
+- Ship it. Optionally fold Minor #1 (a block-scalar-with-`#` fixture) and #3 (dead condition) into a quick follow-up commit — #1 is the only one with any robustness value.
+- The **known anchored/explicit-key limitation** is accurately characterized as narrow. Anchors in config YAML overwhelmingly attach to *values* or whole mappings (`&lt;&lt;: *defaults`), not to keys; `&amp;anchor key: value` and explicit `? key` syntax are rare in the config/CI/deployment YAML this feature targets. The failure mode is also benign: a span-merge bleeds a key name into an adjacent value's lint span, producing a possibly-spurious lint or slightly-off underline — *not* a panic and *not* silent data loss. The prior triage (non-blocking, documented follow-up) is correct. I'd only ask that the limitation be recorded in a code comment on `is_mapping_key` (it partly is) or an issue, so it isn't rediscovered from scratch.
+
+### Assessment
+
+**Ready to merge?** Yes (with the minors as optional follow-ups).
+
+**Reasoning:** The implementation matches the spec and plan exactly, the two fix-commit deviations (shared `is_ignored_comment`, `is_mapping_key` key-exclusion) are sound and well-tested, and both load-bearing external claims — backend routing tries `CommentParser` first, and `LanguageMasker::Comment` is identical to the prior path — check out against the actual source. The only design sharp edge (`collect()` panicking on span overlap) is structurally guarded by YAML's grammar, and the accepted anchored/explicit-key limitation is genuinely rare and non-catastrophic, so neither blocks merge.</result>
+<usage><subagent_tokens>69580</subagent_tokens><tool_uses>6</tool_uses><duration_ms>104406</duration_ms></usage>
+</task-notification>
+
+---
+
+Check status of the final whole-branch review subagent; if done, act on findings and proceed to superpowers:finishing-a-development-branch.
+
+---
+
+3
+
+---
+
+/hunk-review
+
+---
+
+For the semver heuristics test case…  I think it should only skip fields if they are _solely_ a semver. e.g. "0.15.9" or "v1.2.3" -- if the string is prose that just happens to be contain a semver (e.g. "Update depenency library to version 1.2.3" then it should be checked.
+
+---
+
+push this branch to my origin.  Also, look at these two upstream PRs that added language support for other languages: https://github.com/Automattic/harper/pull/2713 and https://github.com/Automattic/harper/pull/2762 -- Seeing what they edited, make any more edits necessary to enable YAML in this repo.
+
+---
+
+I've install pnpm so try the tests
+
+---
+
+I've installed rustup so the wasm stuff should work now.
+
+---
+
+OK, I've been looking at the changes.  I think we made a design error -- other languages don't do all their work inside harper-comments, they are standalone (like harper-html or harper-python).  So let's move the YAML scalar code & tests out into a separate harper-yaml folder.
+
+---
+
+harper-comments -- return harper-comments/src/comment_parser.rs harper-comments/src/lib.rs and harper-comments/src/masker.rs to their original form before today's work.
+
+---
+
+remove the superpowers docs and the change to .gitignore from this branch
+
+---
+
+Rather than the change to harper-comments to make "comment_parsers::Unit" public, can we just introduce the specfic method to avoid double spaces in the YAML parser?
