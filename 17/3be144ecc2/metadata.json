@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.7.8",
+  "checkpoint_version": "branch-v1",
+  "checkpoint_id": "173be144ecc2",
+  "strategy": "manual-commit",
+  "branch": "yaml-support-squash",
+  "checkpoints_count": 1,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/17/3be144ecc2/0/metadata.json",
+      "transcript": "/17/3be144ecc2/0/full.jsonl",
+      "compact_transcript": "/17/3be144ecc2/0/transcript.jsonl",
+      "content_hash": "/17/3be144ecc2/0/content_hash.txt",
+      "prompt": "/17/3be144ecc2/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 52932,
+    "cache_creation_tokens": 924282,
+    "cache_read_tokens": 136539263,
+    "output_tokens": 230317,
+    "api_call_count": 470
+  }
+}
