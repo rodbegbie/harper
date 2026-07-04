@@ -4,9 +4,9 @@
   "checkpoint_id": "6c181a01b5d3",
   "strategy": "manual-commit",
   "branch": "feature/yaml-support-design",
-  "checkpoints_count": 6,
+  "checkpoints_count": 1,
   "files_touched": [
-    "harper-yaml/src/heuristics.rs"
+    "harper-yaml/src/lib.rs"
   ],
   "sessions": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "token_usage": {
-    "input_tokens": 12380,
-    "cache_creation_tokens": 249209,
-    "cache_read_tokens": 2495190,
-    "output_tokens": 40687,
-    "api_call_count": 28
+    "input_tokens": 3104,
+    "cache_creation_tokens": 134756,
+    "cache_read_tokens": 1275590,
+    "output_tokens": 5840,
+    "api_call_count": 10
   }
 }
