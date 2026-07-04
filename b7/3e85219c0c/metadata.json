@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.7.8",
+  "checkpoint_version": "branch-v1",
+  "checkpoint_id": "b73e85219c0c",
+  "strategy": "manual-commit",
+  "branch": "feature/yaml-support-design",
+  "checkpoints_count": 16,
+  "files_touched": [
+    "harper-comments/tests/language_support.rs"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b7/3e85219c0c/0/metadata.json",
+      "transcript": "/b7/3e85219c0c/0/full.jsonl",
+      "compact_transcript": "/b7/3e85219c0c/0/transcript.jsonl",
+      "content_hash": "/b7/3e85219c0c/0/content_hash.txt",
+      "prompt": "/b7/3e85219c0c/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 18931,
+    "cache_creation_tokens": 302478,
+    "cache_read_tokens": 18420158,
+    "output_tokens": 76485,
+    "api_call_count": 143
+  }
+}
