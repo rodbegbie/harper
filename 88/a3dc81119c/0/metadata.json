@@ -1,0 +1,119 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "88a3dc81119c",
+  "session_id": "2223eaa7-0e0b-48b9-8128-b8772cf8560f",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-12T03:07:29.742138Z",
+  "branch": "feature/yaml-support-design",
+  "checkpoints_count": 7,
+  "save_step_count": 1,
+  "files_touched": [
+    "harper-core/src/parsers/line_wise.rs",
+    "harper-core/src/parsers/mod.rs",
+    "harper-yaml/src/dedent.rs"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "4bf8e547dbbf",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 201,
+    "cache_creation_tokens": 163836,
+    "cache_read_tokens": 10211639,
+    "output_tokens": 50495,
+    "api_call_count": 101
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01P1GHpdd4V4UtNGfwQLLoPW",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:test-driven-development"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "4bf8e547dbbf",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 349,
+        "end": 350,
+        "entry_ids": [
+          "67234a34-9681-45ed-a0e5-b47bafbac108"
+        ],
+        "tool_use_id": "toolu_01P1GHpdd4V4UtNGfwQLLoPW"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01P1GHpdd4V4UtNGfwQLLoPW"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:test-driven-development",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 7
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-12T03:07:29.70639Z",
+    "agent_lines": 173,
+    "agent_removed": 43,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 173,
+    "total_lines_changed": 216,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2183,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".agent-traces/.active-session.2223eaa7-0e0b-48b9-8128-b8772cf8560f": 1,
+        ".agent-traces/.active-session.3710e5f6-0401-4fe2-86e9-2d61e6c8fcbf": 1,
+        ".agent-traces/.active-session.6149b2a5-b324-477f-9e9b-97db4244bfb2": 1,
+        ".agent-traces/.active-session.cd32b274-2c75-4ca6-923c-e8405708b691": 1,
+        ".agent-traces/.pending-calls.2223eaa7-0e0b-48b9-8128-b8772cf8560f.json": 1,
+        ".agent-traces/.pending-calls.3710e5f6-0401-4fe2-86e9-2d61e6c8fcbf.json": 1,
+        ".agent-traces/.pending-calls.6149b2a5-b324-477f-9e9b-97db4244bfb2.json": 1,
+        ".agent-traces/.pending-calls.cd32b274-2c75-4ca6-923c-e8405708b691.json": 1,
+        ".agent-traces/.pending-calls.json": 1,
+        ".agent-traces/2223eaa7-0e0b-48/events.ndjson": 90,
+        ".agent-traces/2223eaa7-0e0b-48/meta.json": 19,
+        ".agent-traces/3710e5f6-0401-4f/events.ndjson": 167,
+        ".agent-traces/3710e5f6-0401-4f/meta.json": 20,
+        ".agent-traces/6149b2a5-b324-47/events.ndjson": 2,
+        ".agent-traces/6149b2a5-b324-47/meta.json": 19,
+        ".agent-traces/cd32b274-2c75-4c/events.ndjson": 1487,
+        ".agent-traces/cd32b274-2c75-4c/meta.json": 21,
+        ".claude/settings.json": 84,
+        "CLAUDE.md": 265
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 266,
+      "user_lines_removed": 1,
+      "agent_lines_added": 2179,
+      "agent_lines_removed": 43,
+      "user_added_per_file": {
+        ".agent-traces/2223eaa7-0e0b-48/events.ndjson": 1,
+        "CLAUDE.md": 265
+      },
+      "user_removed_per_file": {
+        "CLAUDE.md": 1
+      }
+    }
+  ]
+}

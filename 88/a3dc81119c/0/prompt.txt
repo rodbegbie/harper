@@ -1,0 +1,25 @@
+run the fuzzer on my yaml work
+
+---
+
+TWo comments on the PR: https://github.com/Automattic/harper/pull/3757#discussion_r3530364181 and https://github.com/Automattic/harper/pull/3757#discussion_r3530367855 -- Is that right? Should you remove the (crate) tag
+
+---
+
+Draft a reply, and I'll post it.
+
+---
+
+I've posted it. Thanks.  OK, next thing, this suggest: https://github.com/Automattic/harper/pull/3757#discussion_r3530372348  I think this sounds like a good idea. What would be involved?
+
+---
+
+The commenter suggested it was also in the HTML parser too?
+
+---
+
+Draft a reply
+
+---
+
+I'll post that.  Can you do the linewise extraction now.
