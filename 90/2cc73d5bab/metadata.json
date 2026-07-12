@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "902cc73d5bab",
+  "strategy": "manual-commit",
+  "branch": "feature/yaml-support-design",
+  "checkpoints_count": 4,
+  "files_touched": [
+    "harper-cli/src/main.rs",
+    "harper-core/src/linting/more_adjective.rs",
+    "harper-core/src/linting/pronoun_verb_agreement.rs",
+    "harper-core/src/linting/regionalisms.rs",
+    "harper-desktop/src-tauri/src/highlighter/render_state.rs"
+  ],
+  "sessions": [
+    {
+      "metadata": "/90/2cc73d5bab/0/metadata.json",
+      "transcript": "/90/2cc73d5bab/0/full.jsonl",
+      "compact_transcript": "/90/2cc73d5bab/0/transcript.jsonl",
+      "content_hash": "/90/2cc73d5bab/0/content_hash.txt",
+      "prompt": "/90/2cc73d5bab/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 333,
+    "cache_creation_tokens": 688548,
+    "cache_read_tokens": 41411770,
+    "output_tokens": 98821,
+    "api_call_count": 167
+  }
+}
