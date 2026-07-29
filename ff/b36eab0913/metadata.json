@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "ffb36eab0913",
+  "strategy": "manual-commit",
+  "branch": "fix/3911-lint-update-coalescing",
+  "checkpoints_count": 7,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/ff/b36eab0913/0/metadata.json",
+      "transcript": "/ff/b36eab0913/0/full.jsonl",
+      "compact_transcript": "/ff/b36eab0913/0/transcript.jsonl",
+      "content_hash": "/ff/b36eab0913/0/content_hash.txt",
+      "prompt": "/ff/b36eab0913/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 56,
+    "cache_creation_tokens": 44575,
+    "cache_read_tokens": 10997133,
+    "output_tokens": 24984,
+    "api_call_count": 29
+  }
+}
