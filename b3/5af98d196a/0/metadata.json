@@ -1,0 +1,243 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "b35af98d196a",
+  "session_id": "4e30f37a-0796-4ca2-ba13-00368f81f997",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-29T03:50:45.490536Z",
+  "branch": "test/3911-ignore-suggestion-coverage",
+  "checkpoints_count": 7,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "2124445e012c",
+  "checkpoint_transcript_start": 626,
+  "transcript_lines_at_start": 626,
+  "compact_transcript_start": 90,
+  "token_usage": {
+    "input_tokens": 160,
+    "cache_creation_tokens": 100191,
+    "cache_read_tokens": 24546386,
+    "output_tokens": 62496,
+    "api_call_count": 82
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-hunk-review-2026-07-29T03:18:51.66387Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "hunk-review"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "ee2ab5101344",
+      "timestamp": "2026-07-29T03:18:51.66387Z",
+      "native": {
+        "command": "/hunk-review"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/hunk-review",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01JEcKfTcbcHGZ3ezXkTvs2C",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:systematic-debugging"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "2124445e012c",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 27,
+        "end": 28,
+        "entry_ids": [
+          "0253e6e5-bdbc-4e22-ad0e-d7c7b7bcebd2"
+        ],
+        "tool_use_id": "toolu_01JEcKfTcbcHGZ3ezXkTvs2C"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01JEcKfTcbcHGZ3ezXkTvs2C"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:systematic-debugging",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01UUpSd9EpuQEHkLshG5NeNi",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "markdown"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "2124445e012c",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 197,
+        "end": 198,
+        "entry_ids": [
+          "8fec0c3e-5963-4d33-b467-5c1905e1dd08"
+        ],
+        "tool_use_id": "toolu_01UUpSd9EpuQEHkLshG5NeNi"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01UUpSd9EpuQEHkLshG5NeNi"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: markdown",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01BeMpgB8hseURFnfMN56481",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:brainstorming"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "2124445e012c",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 377,
+        "end": 378,
+        "entry_ids": [
+          "209ad79c-6923-4865-8a53-25f8c2848a82"
+        ],
+        "tool_use_id": "toolu_01BeMpgB8hseURFnfMN56481"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01BeMpgB8hseURFnfMN56481"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:brainstorming",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01A6efyrKPc4eEgK6qm8UVka",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:test-driven-development"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "2124445e012c",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 988,
+        "end": 989,
+        "entry_ids": [
+          "3a61d0d8-9a8c-42aa-bd2d-fc2224a64685"
+        ],
+        "tool_use_id": "toolu_01A6efyrKPc4eEgK6qm8UVka"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01A6efyrKPc4eEgK6qm8UVka"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:test-driven-development",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 13
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 3621,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".agent-traces/.active-session.06246a3e-d98b-4122-9b1d-812fd5e57ce7": 1,
+        ".agent-traces/.active-session.2223eaa7-0e0b-48b9-8128-b8772cf8560f": 1,
+        ".agent-traces/.active-session.3710e5f6-0401-4fe2-86e9-2d61e6c8fcbf": 1,
+        ".agent-traces/.active-session.4e30f37a-0796-4ca2-ba13-00368f81f997": 1,
+        ".agent-traces/.active-session.6149b2a5-b324-477f-9e9b-97db4244bfb2": 1,
+        ".agent-traces/.active-session.cd32b274-2c75-4ca6-923c-e8405708b691": 1,
+        ".agent-traces/.active-session.f3aa41be-8f5e-4f4d-909e-4afc58202c0c": 1,
+        ".agent-traces/.pending-calls.06246a3e-d98b-4122-9b1d-812fd5e57ce7.json": 1,
+        ".agent-traces/.pending-calls.2223eaa7-0e0b-48b9-8128-b8772cf8560f.json": 1,
+        ".agent-traces/.pending-calls.3710e5f6-0401-4fe2-86e9-2d61e6c8fcbf.json": 1,
+        ".agent-traces/.pending-calls.4e30f37a-0796-4ca2-ba13-00368f81f997.json": 1,
+        ".agent-traces/.pending-calls.6149b2a5-b324-477f-9e9b-97db4244bfb2.json": 1,
+        ".agent-traces/.pending-calls.cd32b274-2c75-4ca6-923c-e8405708b691.json": 1,
+        ".agent-traces/.pending-calls.f3aa41be-8f5e-4f4d-909e-4afc58202c0c.json": 1,
+        ".agent-traces/.pending-calls.json": 1,
+        ".agent-traces/06246a3e-d98b-41/events.ndjson": 143,
+        ".agent-traces/06246a3e-d98b-41/meta.json": 19,
+        ".agent-traces/2223eaa7-0e0b-48/events.ndjson": 451,
+        ".agent-traces/2223eaa7-0e0b-48/meta.json": 21,
+        ".agent-traces/3710e5f6-0401-4f/events.ndjson": 167,
+        ".agent-traces/3710e5f6-0401-4f/meta.json": 20,
+        ".agent-traces/4e30f37a-0796-4c/events.ndjson": 207,
+        ".agent-traces/4e30f37a-0796-4c/meta.json": 18,
+        ".agent-traces/6149b2a5-b324-47/events.ndjson": 2,
+        ".agent-traces/6149b2a5-b324-47/meta.json": 19,
+        ".agent-traces/cd32b274-2c75-4c/events.ndjson": 1487,
+        ".agent-traces/cd32b274-2c75-4c/meta.json": 21,
+        ".agent-traces/f3aa41be-8f5e-4f/events.ndjson": 460,
+        ".agent-traces/f3aa41be-8f5e-4f/meta.json": 21,
+        ".claude/settings.json": 84,
+        ".codex/config.toml": 3,
+        ".codex/hooks.json": 63,
+        ".private-journal/2026-07-28/17-51-35-000000-3a4e38c9.md": 15,
+        "CLAUDE.md": 265,
+        "docs/superpowers/specs/2026-07-28-lint-update-coalescing-design.md": 120
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 695,
+      "user_lines_removed": 2,
+      "agent_lines_added": 3112,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".agent-traces/4e30f37a-0796-4c/events.ndjson": 33,
+        ".agent-traces/4e30f37a-0796-4c/meta.json": 1,
+        ".biome-local.json": 126,
+        ".claude/settings.json": 84,
+        ".codex/config.toml": 3,
+        ".codex/hooks.json": 63,
+        "CLAUDE.md": 265,
+        "docs/superpowers/specs/2026-07-28-lint-update-coalescing-design.md": 120
+      },
+      "user_removed_per_file": {
+        ".agent-traces/4e30f37a-0796-4c/meta.json": 1,
+        "CLAUDE.md": 1
+      }
+    }
+  ]
+}

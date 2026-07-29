@@ -1,0 +1,9 @@
+/hunk-review
+
+---
+
+you can clear away that worktree. There's nothing on it that hasn't been pushed to origin
+
+---
+
+Add a local override for the biome rule, and never commit it.
