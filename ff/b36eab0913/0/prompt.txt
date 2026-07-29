@@ -17,3 +17,79 @@ Let's wait to make sure #3912 is passing CI.  If it does, then let's undraft PR 
 ---
 
 keep an eye on 3913.  If everything is green on it, then end this session.
+
+---
+
+<task-notification>
+<task-id>b7jdo0dl4</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/4e30f37a-0796-4ca2-ba13-00368f81f997/tasks/b7jdo0dl4.output</output-file>
+<status>completed</status>
+<summary>Background command "Watch CI on PR 3913" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+/code-review PR 3913
+
+---
+
+<task-notification>
+<task-id>ac8e6c1b3c1f5bc6f</task-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/4e30f37a-0796-4ca2-ba13-00368f81f997/tasks/ac8e6c1b3c1f5bc6f.output</output-file>
+<status>completed</status>
+<summary>Agent "/code-review PR 3913" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>No `ReportFindings` tool is available in this session (checked via `select:ReportFindings` and a keyword search), so here are the findings directly.
+
+## Review of PR #3913 — `test/3911-ignore-suggestion-coverage`
+
+Scope: the two test commits plus the stacked `fix(lint-framework)` commit that GitHub shows in the diff against `master`.
+
+### Findings
+
+**1. `/Users/rod/build/harper/packages/lint-framework/src/lint/LintFramework.ts:208` — high-ish/medium: a rejected lint pass silently drops the coalesced follow-up.**
+
+The dirty check sits *after* the `try/finally`, so when the `Promise.all` rejects the `finally` clears `lintRequested` and the exception propagates straight out of `requestLintUpdate` — line 208-211 never runs. Scenario: the user is typing while a lint is in flight (`lintDirty = true`), the provider rejects (in MV3 this is routine — service worker recycled, "message port closed"), the guard is correctly released but the queued re-lint is never issued, so highlights stay stale against the old prefix until the 1-second self-poll or the next keystroke. That is exactly the class of bug the PR is fixing, on the error path. Moving the dirty check into the `finally` (or wrapping in `catch`) fixes it. Note that test 2 does *not* cover this: it rejects the first pass before any `update()` has set `lintDirty`, so it passes either way.
+
+**2. `/Users/rod/build/harper/packages/lint-framework/src/lint/LintFramework.ts:210` — low: `void this.requestLintUpdate()` adds a second unhandled-rejection source in production code.**
+
+The PR body flags the `update()` → `requestLintUpdate()` unhandled rejection as pre-existing and out of scope, but this line introduces a *new* one on the same footing. If the follow-up pass rejects, it surfaces as an unhandled rejection in every real browser, not only under test. A `.catch(() =&gt; {})` here (or reusing whatever handler the eventual fix uses) costs nothing.
+
+**3. `/Users/rod/build/harper/packages/lint-framework/src/lint/LintFramework.test.ts:26` — medium: the test's validity rests on `requestAnimationFrame` running at ~60 Hz, which is not guaranteed.**
+
+`TICKS = 10` animation frames is the only thing keeping the waits below `LintFramework`'s 1-second self-poll, and the PR body documents that a version of these tests already passed against unfixed code once for exactly this reason. rAF is throttled or suspended when the page is backgrounded or occluded, and stretches under CI load. If ten frames ever span more than a second, `waitForCalls(calls, 2)` is satisfied by the poll rather than by the coalescing fix, and the test goes green against broken code — the failure mode is a silent false pass, which is worse than a flake. A wall-clock bound (`performance.now()` deadline well under 1000 ms, asserting on elapsed time) or making the poll interval injectable would make this deterministic.
+
+**4. `/Users/rod/build/harper/packages/lint-framework/src/lint/LintFramework.test.ts:97` — low: `LintFramework` instances are never disposed.**
+
+The constructor starts a self-rescheduling `setTimeout(…, 1000)` loop, attaches seven `window` listeners and a capturing `document` keydown listener (`attachWindowListeners` / `lintHotkey`). `afterEach` only removes the textareas, so every framework built by the file keeps polling and listening for the rest of the run; test 1 additionally leaves a lint permanently in flight (its second deferred promise is never resolved). Benign with two tests as written, but it is a landmine for the next test added to this file — a leaked framework whose target is still connected will happily fire provider calls into a previous test's `calls` array. There is no `destroy()` on `LintFramework` today; if adding one is out of scope, a comment saying so would help.
+
+**5. `/Users/rod/build/harper/packages/lint-framework/src/lint/LintFramework.test.ts:69` — low: the unhandled-rejection suppression depends on listener ordering that isn't guaranteed.**
+
+`suppressProviderFailure` calls `event.preventDefault()`, which only cancels the *default* action. Vitest browser mode installs its own `unhandledrejection` handler at runner startup — i.e. before this one — and if it records the rejection synchronously in its listener, the later `preventDefault()` cannot un-record it. It evidently works on the author's machine, but it is sensitive to vitest's internals. Driving the rejecting path through `fw.requestLintUpdate().catch(() =&gt; {})` instead of `fw.update()` would remove the reliance entirely.
+
+**6. `/Users/rod/build/harper/packages/lint-framework/vite.config.ts:8` — low: no `retry` for CI, unlike both configs this one is modelled on.**
+
+`packages/harper.js/vite.config.ts` and `packages/obsidian-plugin/vite.config.ts` both set `retry: process.env.CI ? 5 : 0` on `test`. The new config omits it. Given these are timing-sensitive browser tests now gating a `just_checks` matrix entry, a single flake fails the whole PR run. Either match the precedent or say in the PR why this suite should not retry (a defensible position, given finding 3 — but it should be a stated decision).
+
+**7. `/Users/rod/build/harper/packages/chrome-plugin/tests/testUtils.ts:16` — low: the stated justification for `LINT_SETTLE_MS = 1500` doesn't hold at the worst phase.**
+
+The comment says 1500 ms "comfortably clears `LintFramework`'s one-second self-poll". The sleep starts when the first highlight appears, at an arbitrary phase relative to the poll, so worst case the poll fires ~999 ms in and the ensuing WASM lint plus render frame must finish inside the remaining ~500 ms — on a runner where the test is already marked `test.slow()`. In practice #3912 makes the follow-up immediate so the poll is only a fallback and 1500 ms is fine, but the comment justifies the number by the wrong path. Either reword it (the follow-up is event-driven now) or raise the constant so the poll fallback genuinely fits.
+
+**8. `/Users/rod/build/harper/pnpm-lock.yaml:596` — low: unrelated resolution churn beyond the added dependencies.**
+
+Alongside the expected `vitest`/`@vitest/browser*`/`@playwright/test` entries, the lockfile carries drift: `picomatch` 4.0.2 → 4.0.3 (which re-resolves `packages/web`'s `svelte-check` and `fdir`), `magic-string` 0.30.17 → 0.30.21, removal of `es-module-lexer@1.6.0` and `ws@8.18.1`, and rewritten deprecation URLs. None of it belongs to this PR, and it changes resolution for a package the PR doesn't touch. Worth regenerating with a minimal install so a reviewer can see only the intended additions.
+
+### Things I checked and found fine
+
+- `build-lint-framework` exists and is a correct prerequisite — `src/lint/*` has runtime (not type-only) imports from `harper.js`, so the dist really is needed.
+- `tsconfig.json` is `"include": ["src"]` with `noEmit: true`, so the new test file is type-checked by `check-js` but emits nothing; `vitest` is a devDependency so the import resolves.
+- `@playwright/test@1.60.0` matches `chrome-plugin` and `obsidian-plugin` exactly; `vitest`/`@vitest/browser*` at `^4.0.16` match `harper.js` and `obsidian-plugin`.
+- The CI matrix entry and the `just test` aggregate both include the new task; the recipe mirrors `test-obsidian` and `test-harperjs` line for line.
+- The `try`/`finally` restructure preserves the `immediate` semantics and the `requestRender()` ordering; `lintDirty = false` is set in the same synchronous block that reads target text, so there is no read-after-clear gap.</result>
+<usage><subagent_tokens>87446</subagent_tokens><tool_uses>26</tool_uses><duration_ms>357370</duration_ms></usage>
+</task-notification>
+
+---
+
+Address #1 in PR 3912, and if possible add a test on PR 3913 to validate it.  Depending on how big a change #3 is, it might be worth it. Propose something.  And yes, fix the comment for #7.
