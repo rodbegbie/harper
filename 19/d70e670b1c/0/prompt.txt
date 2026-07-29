@@ -1,0 +1,356 @@
+/code-review:code-review  PR 3757
+
+---
+
+<task-notification>
+<task-id>a5231e3d53e60de72</task-id>
+<tool-use-id>toolu_015e71DgN9usovnrKSfvw87A</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/a5231e3d53e60de72.output</output-file>
+<status>completed</status>
+<summary>Agent "Check PR 3757 eligibility" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## PR #3757 Analysis
+
+**State:** OPEN
+**Draft:** No
+**Title:** feat: add YAML support
+
+### Findings
+
+**(a) Is the PR closed?** 
+No — `state: "OPEN"`
+
+**(b) Is it a draft?** 
+No — `isDraft: false`
+
+**(c) Does it obviously NOT need a code review?**
+No — this is a substantial feature addition, not a trivial change:
+- Adds a new `harper-yaml` crate with YAML linting support
+- Includes 39 new unit/integration tests
+- Wires YAML support into `harper-ls` and `harper-cli`
+- Adds fuzzing and VS Code integration
+- Definitely needs careful review
+
+Author is `rodbegbie` (Rod Begbie, human), not a bot.
+
+**(d) Has a code review already been posted by Claude?**
+No — there is no comment starting with "### Code review" from Claude in the comments or reviews. 
+
+The PR has a code review from collaborator `elijah-potter` (state: CHANGES_REQUESTED, 2026-07-06) saying "Good stuff! I just have a few nits." Rod has since posted a comment (2026-07-29) saying: "Hi @elijah-potter. I've addressed your comments, and have updated the PR to cleanly land on master. Let me know if you have more feedback. Thanks!"
+
+---
+
+**VERDICT: ELIGIBLE FOR REVIEW**
+
+The PR is open, not a draft, represents substantial work requiring careful review, and has not received a Claude code review yet. The collaborator's requested changes appear to have been addressed, making this a good candidate for a fresh Claude code review pass.</result>
+<usage><subagent_tokens>30602</subagent_tokens><tool_uses>2</tool_uses><duration_ms>21987</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ae68f256b67351b1a</task-id>
+<tool-use-id>toolu_01RGsTMsNgb2oXer2aWY1NgJ</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/ae68f256b67351b1a.output</output-file>
+<status>completed</status>
+<summary>Agent "Summarize PR 3757" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have enough information from the diff metadata to write a comprehensive summary. Let me compile the findings:
+
+## PR #3757 Summary: YAML Support for Harper
+
+**Title:** feat: add YAML support
+
+**Description:** Adds comprehensive YAML file linting to Harper, enabling `harper-ls` and `harper-cli` to check `.yaml`/`.yml` files. The implementation lints YAML comments and prose-like scalar values while leaving structural YAML (keys, identifiers, config values) untouched.
+
+### Scope
+
+- **Files changed:** 23 files (13 new, 10 modified)
+- **Lines added:** 935 | **Lines deleted:** 3
+- **Overall impact:** Moderate-sized feature addition with focused, well-contained scope
+
+### Architecture &amp; Key Changes
+
+**1. New `harper-yaml` crate** (standalone, following the pattern of `harper-html` and `harper-python`)
+   - **`lib.rs` (~353 lines):** Core `YamlParser` and `YamlMasker` that runs two independent tree-sitter passes (comments, scalar values) over the parsed document and combines surviving spans
+   - **Key logic:**
+     - Scalar-value detection explicitly excludes mapping keys by comparing a candidate node's start byte against its enclosing pair's start (keys always appear first)
+     - `heuristics::is_prose_scalar()` filters out structural config (requires 3+ words; rejects anything that looks like a URL/path/version token)
+     - `DedentLines` wrapper processes block-scalar indentation line-by-line to avoid false-positive "double space" formatting lints
+   - **`heuristics.rs` (~196 lines):** Prose detection heuristics; supports YAML comment suppression (spellchecker:ignore family)
+   - **`dedent.rs` (~100 lines):** Line-wise parser combinator specific to block scalars
+
+**2. Wiring into existing tools**
+   - `harper-ls/src/backend.rs`: Routes `"yaml"` language ID to `YamlParser`
+   - `harper-cli/src/input/single_input.rs`: Routes `.yaml`/`.yml` file extensions to `YamlParser`
+   - Updates to `Cargo.toml` across fuzz, harper-cli, harper-ls adding the new crate as a dependency
+
+**3. Testing &amp; Quality**
+   - New `LineWise&lt;P, S&gt;` combinator in `harper-core::parsers` (~148 lines): Shared per-line parsing mechanism extracted from duplicate logic in harper-comments (Unit, Lua, Solidity parsers), now generalized for reuse
+   - Dedicated `fuzz_harper_yaml` fuzzing target (9 lines)
+   - Test fixtures: `clean.yaml`, `dirty.yaml`, `filtered_values.yaml` (39 total unit/integration tests)
+
+**4. Non-code changes**
+   - VS Code plugin: Added `onLanguage:yaml` activation in `package.json`; new YAML integration test in `languages.test.ts`
+   - Documentation: Updated language-server support table in `packages/web/src/routes/docs/integrations/language-server/+page.md` to list YAML as supported (marked "Comments Only: no" since it also lints prose scalars, unlike TOML)
+
+**5. Maintenance fixes (unrelated to YAML work)**
+   - **`fix: clear clippy drift from newer stable Rust (1.97.0)`** — final commit addresses CI failures from Rust 1.97.0's new lints (`useless_borrows_in_formatting`, `question_mark`, `float_literal_f32_fallback`); fixes scattered across harper-core, harper-cli, harper-desktop
+   - Minor cleanup: Removed unused `Config` import in harper-desktop's mac_broker module
+
+### Notable Design Decisions
+
+- **Standalone crate pattern:** Mirrors `harper-python`/`harper-html` rather than folding into `harper-comments`, keeping concerns separate
+- **Tree-sitter dual-pass approach:** Comments and scalars handled independently, avoiding tight coupling between detection strategies
+- **Heuristic-driven prose detection:** Avoids over-linting structural config while catching genuine prose
+- **LineWise refactor:** Extracted shared combinator reduces duplication and improves maintainability across language-specific parsers
+- **AI disclosure:** PR explicitly documents Claude agent involvement with interactive review by Rod
+
+### Testing Approach
+
+- Full workspace test suite passes (including 39 new tests)
+- VS Code integration suite (36 specs) validates end-to-end linting with real harper-ls binary
+- Manual verification via `harper-cli lint` against hand-written fixtures</result>
+<usage><subagent_tokens>41198</subagent_tokens><tool_uses>4</tool_uses><duration_ms>32066</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a6f0b90c6eb4c93eb</task-id>
+<tool-use-id>toolu_01RNcrr1kc3a4XekwUCorC55</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/a6f0b90c6eb4c93eb.output</output-file>
+<status>completed</status>
+<summary>Agent "Find relevant CLAUDE.md files for PR 3757" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Perfect. Here's the final report:
+
+## CLAUDE.md Files Relevant to PR #3757
+
+**Only one CLAUDE.md file applies:**
+
+- **`/Users/rod/build/harper/CLAUDE.md`** (symlink to `/Users/rod/build/harper/AGENTS.md`)
+  - Covers: root-level changes and all subdirectories affected by the PR
+  - Affected areas in the PR: `fuzz/`, `harper-cli/`, `harper-core/`, `harper-desktop/`, `harper-ls/`, `harper-yaml/`, `packages/vscode-plugin/`, `packages/web/`
+
+There are no directory-level CLAUDE.md files in the repository. All guidance for reviewing PR #3757 comes from the root-level documentation.</result>
+<usage><subagent_tokens>34779</subagent_tokens><tool_uses>7</tool_uses><duration_ms>51452</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a515e49a4ad80bc70</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/a515e49a4ad80bc70.output</output-file>
+<status>completed</status>
+<summary>Agent "Git history context review for PR 3757" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Confirmed and ready to report.
+
+## Findings on PR #3757 (feature/yaml-support-design)
+
+**Scope check first:** `gh pr diff 3757 --repo Automattic/harper --name-only` lists only 25 files. The pre-existing (not brand-new) files it touches are: `Cargo.lock`/`Cargo.toml`, `fuzz/Cargo.toml`, `harper-cli/Cargo.toml`, `harper-cli/src/input/single_input.rs`, `harper-cli/src/main.rs`, `harper-core/src/linting/regionalisms.rs`, `harper-core/src/parsers/mod.rs`, `harper-desktop/src-tauri/src/mac_broker/mod.rs`, `harper-ls/Cargo.toml`, `harper-ls/src/backend.rs`, `packages/vscode-plugin/package.json`, `packages/web/src/routes/docs/integrations/language-server/+page.md`. Everything else (`harper-yaml/*`, `harper-core/src/parsers/line_wise.rs`, fuzz target, test fixtures) is new.
+
+### Notable finding: the LineWise/harper-comments premise doesn't match what's actually in this PR
+
+Commit `8afd0b56` ("refactor(harper-yaml): extract per-line parsing into shared LineWise combinator") says in its message: *"DedentLines duplicated a split-by-line/strip/parse/stitch pattern already present three times in harper-comments (Unit, Lua, Solidity). Pull the shared mechanism into `harper_core::parsers::LineWise`..."* — but `git show --stat 8afd0b56` shows it only touches `harper-core/src/parsers/line_wise.rs`, `harper-core/src/parsers/mod.rs`, and `harper-yaml/src/dedent.rs`. It does **not** touch `harper-comments/src/comment_parsers/{unit,lua,solidity}.rs`. I confirmed those three files still contain their own separate `split(|c| *c == '\n')` / `parse_line` logic, last modified in unrelated older commits (`3909d2e4`, `01e900b8`, `4a16b92a`) — untouched by this PR.
+
+The actual migration of Unit/Lua/Solidity onto `LineWise` exists as a **separate, not-yet-merged branch** `feature/linewise-comment-parsers` (checked out in a local worktree at `.claude/worktrees/linewise-comment-parsers`, one commit ahead: `79f653b8 refactor(harper-comments): migrate Unit, Lua, and Solidity onto LineWise`). So the "regression risk" scenario the task asked me to check for (LineWise dropping/altering behavior from Unit/Lua/Solidity's original per-line logic) **cannot occur in PR #3757 as it stands** — those files aren't part of this diff. Worth flagging to Rod only because the commit message's stated motivation implies a migration this PR doesn't actually perform; not a functional regression, just a scope/description mismatch worth being aware of when reviewing (or squashing/describing the PR).
+
+### Everything else checked out clean, with real history backing each change
+
+- `harper-core/src/linting/regionalisms.rs`: clippy-driven refactor (adds `Copy, Clone` to `Concept`, replaces `match ... { Some(x) =&gt; ..., None =&gt; return None }` with `?`). Confirmed behaviorally identical — part of `d2650120`'s stated clippy-drift cleanup.
+- `harper-desktop/src-tauri/src/mac_broker/mod.rs`: two changes, both verified against history:
+  - `Config::curated_integrations()`/`Config::is_integration_enabled_in()` → `Integration::curated_integrations()`/`Integration::is_integration_enabled_in()`. I checked `607d0f80` ("fix(desktop): lagging status indicator") and confirmed it really did move those associated functions from `Config` onto `Integration` (old `config.rs` deleted, new `config/integration.rs` added) but left the stale `Config` import/usage in `mac_broker/mod.rs` uncleaned — exactly as `d2650120`'s commit message claims.
+  - `target_pid()`'s nested `if let` collapsed into a let-chain (`if let ... &amp;&amp; ...`) — logically identical control flow, just a clippy `collapsible_if` fix.
+- `harper-cli/src/main.rs`: two trivial clippy fixes (`&amp;*input_identifier` → `input_identifier.as_ref()`, and `format!("\"{}\":", &amp;old)` → `format!("\"{old}\":")`) — no behavior change.
+- `harper-core/src/parsers/mod.rs`, `harper-ls/src/backend.rs`, `harper-cli/src/input/single_input.rs`: all purely additive (new `mod line_wise;`/`pub use LineWise`, new `"yaml"`/`"yaml"|"yml"` match arms wiring in `YamlParser`). No existing branches or logic touched.
+- `packages/web/.../language-server/+page.md`: additive doc rows for YAML and (from an unrelated upstream commit pulled in via rebase) Termux install instructions — no contradictions found.
+- `packages/vscode-plugin/package.json`: version bump, new `onLanguage:yaml`/`onLanguage:gleam` activation events, and a large block of new `harper.linters.*` settings entries — these settings entries are generated/rebased-in from unrelated upstream rule-addition commits, not authored by this PR; nothing suspicious.
+
+### Conclusion
+
+I found no evidence of a regression, revert, or contradiction of a previously-fixed bug in any pre-existing file this PR modifies. The one thing worth surfacing to Rod is the harper-comments/LineWise scope mismatch above — it's not a bug, but the commit message's framing doesn't match what's actually in the diff, and the real migration lives on a sibling branch not yet part of this PR.</result>
+<usage><subagent_tokens>95642</subagent_tokens><tool_uses>13</tool_uses><duration_ms>157499</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ad17d94d5af89428b</task-id>
+<tool-use-id>toolu_019UH8PAUeKdz59GAq8RpCzu</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/ad17d94d5af89428b.output</output-file>
+<status>completed</status>
+<summary>Agent "Prior PR comments applicable to PR 3757" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Summary
+
+I reviewed PR #3757's changed files, then searched Automattic/harper for prior PRs touching the same territory (harper-comments per-line comment parsers, harper-core markup/embedded-language parsers, harper-ls language routing) and read their review/issue comments via `gh api repos/Automattic/harper/pulls/{n}/comments` and `.../issues/{n}/comments`. I also read PR #3757's own review thread, since it turned out several of these precedents were already raised there by the maintainer.
+
+**Bottom line: I found relevant prior-PR feedback, but in every case it either already applies-and-is-addressed in the current code, or clearly doesn't apply. I found no outstanding gap.**
+
+### 1. Fuzzer-found panics in new upstream parsing dependencies — applies, already satisfied
+
+- Prior PR: #3631 "feat(core): support MDX" — https://github.com/Automattic/harper/pull/3631
+- Quote (elijah-potter, maintainer): *"The problem we've encountered that's made this work difficult to merge, is that our fuzzer found several high-profile panic conditions in the upstream crate used by this PR (markdown). It doesn't seem maintained, which makes it a difficult dependency to add."*
+- Why it applies: harper-yaml also pulls in a new upstream parsing dependency (`tree-sitter-yaml`) for a new markup language. This is exactly the pattern that stalled #3631.
+- Status: Already addressed. Same reviewer asked directly on #3757 (`fuzz/fuzz_targets/fuzz_harper_yaml.rs`, https://github.com/Automattic/harper/pull/3757#discussion_r3530376493): *"I'm curious if you've actually run the fuzzer. If so, what were the results?"* — and got a concrete answer (120s run, 635,305 execs, no crashes/panics). I independently checked `tree-sitter-yaml`'s upstream repo (`tree-sitter-grammars/tree-sitter-yaml`) and it's active (pushed within the last ~2 months, not archived), unlike the unmaintained `markdown` crate that blocked #3631. Minor, low-confidence suggestion only: given this reviewer's stated bar came from panics found via fuzzing, a longer/CI-scheduled fuzz run (beyond the one-off 120s) would strengthen confidence further, but nothing indicates this is currently a problem.
+
+### 2. Multiline-scalar indentation causing false "double space" positives — applies, already litigated on this PR
+
+- Prior PR: #2038 "feat(core): Add support for Python docstrings" — https://github.com/Automattic/harper/pull/2038
+- Quotes: rushter — *"I've noticed that it won't work properly for multi-line docstrings."* / elijah-potter — *"We solved the same problem in `harper-html` by clamping the number of spaces represented by a space token to `0..=1`. See: `harper-html/src/lib.rs`"*
+- Why it applies: `harper-yaml/src/dedent.rs`'s `DedentLines` exists to solve the exact same class of bug (raw block-scalar indentation reading as a run of spaces and tripping the double-space rule).
+- Status: Already addressed, and the divergence from the established clamp-based fix was explicitly reviewed. Elijah-potter asked on #3757 (https://github.com/Automattic/harper/pull/3757#discussion_r3530372348) whether the HTML/Python clamp approach could be reused instead of adding new logic; the response (https://github.com/Automattic/harper/pull/3757#discussion_r3565544684) correctly explains why a straight reuse would be wrong for YAML (indentation is only structurally meaningful right after a line break; a genuine mid-line double-space typo should still be flagged), and instead extracted the `Unit`/`Lua`/`Solidity` split-line pattern into the new `LineWise` combinator. I also ran adversarial manual tests (folded `&gt;` and literal `|` scalars spanning multiple lines) against the built `harper-cli` on this branch and did not reproduce a false positive from the line-splitting mechanism itself.
+
+### 3. Overlapping tree-sitter spans causing a `Mask` panic — applies, already defensively handled
+
+- Prior PR: #1443 "feat: add solidity support" — https://github.com/Automattic/harper/pull/1443
+- Quote (beeb): *"Original implementation was not working with the newer version of some grammars which have nested items for each line. Starting with 2 lines, the older logic was not sound (because 3 or more spans were overlapping) so I re-implemented it."*
+- Why it applies: `YamlMasker::create_mask` in `harper-yaml/src/lib.rs` runs two independent tree-sitter queries (comments, scalars) and merges their spans — the same overlap risk.
+- Status: Already mitigated. The code has an explicit defensive coalescing step with a comment directly naming this risk: *"Mask's FromIterator panics on overlapping spans... under adversarial input / parser error recovery they could theoretically produce overlapping spans. To avoid turning that into a panic (a DoS in harper-ls), coalesce..."* (`harper-yaml/src/lib.rs:98-104`). No gap found.
+
+### 4. Ruled out — VS Code can't properly test unrecognized-extension languages
+
+- Prior PR: #1443 — https://github.com/Automattic/harper/pull/1443
+- Quote (mcecode): *"We haven't been able to set up the VS Code tests to support languages like Solidity that VS Code doesn't support out of the box. It doesn't understand what `.sol` files are so it passes it to harper-ls as plaintext..."*
+- Does not apply: YAML is a VS Code built-in language mode, unlike Solidity/ink/jjdescription. PR #3757's added `languages.test.ts` fixture (`yaml.yaml`) exercises the real language ID, and the PR description confirms the real VS Code integration suite (36 specs) passed.
+
+### 5. Ruled out — special document-selector handling for virtual language IDs
+
+- Prior PR: #3729 "feat: lint the Source Control commit message box" — https://github.com/Automattic/harper/pull/3729
+- Quote (mcecode): guidance on special-casing the `documentSelector`/`activationEvents` `filter`/`flatMap` logic for `scminput`, a language ID that doesn't support file/untitled schemes.
+- Does not apply: `packages/vscode-plugin/package.json`'s new `"onLanguage:yaml"` entry flows through the existing generic filter/flatMap in `extension.ts` (confirmed by reading current `extension.ts:69-71`) exactly like every other normal file-based language — no special-casing needed or missing.
+
+### 6. Ruled out — missing file-extension routing
+
+- Prior PR: #1369 "feat: Added ORGMODE parser" — https://github.com/Automattic/harper/pull/1369
+- Quote (elijah-potter): *"Is there a file extension for org-mode documents? If so, make sure you add it in the related function below."*
+- Does not apply: confirmed both `harper-cli/src/input/single_input.rs` (`Some("yaml") | Some("yml") =&gt; Box::new(YamlParser::default())`) and `harper-ls/src/backend.rs` (`"yaml" =&gt; Some(Box::new(YamlParser::default()))`) are wired up correctly.
+
+No further prior-PR review threads (searched via `gh search prs`/`gh pr list --search` for "LineWise", "harper-yaml", "per-line parser", "fuzz") turned up additional relevant precedent — the `LineWise` combinator and `harper-yaml` crate are novel to this PR/stack (#3757 and its dependent #3909).</result>
+<usage><subagent_tokens>98960</subagent_tokens><tool_uses>38</tool_uses><duration_ms>546894</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a68c62773716d8e30</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/a68c62773716d8e30.output</output-file>
+<status>completed</status>
+<summary>Agent "Code comment compliance check for PR 3757" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>## Review findings — PR #3757 (YAML support), comment-vs-code audit
+
+I read the full current versions of all files touched by the PR on `feature/yaml-support-design` (harper-yaml crate in full, `harper-core/src/parsers/line_wise.rs` and `mod.rs`, `harper-core/src/mask/mod.rs`, `harper-tree-sitter/src/lib.rs`, `harper-comments/src/masker.rs` and `comment_parser.rs`, `harper-ls/src/backend.rs`, `harper-cli/src/input/single_input.rs`, `harper-core/src/linting/regionalisms.rs`), ran `cargo test -p harper-yaml` (all 47 tests pass), and probed `tree-sitter-yaml`'s actual grammar node shapes (`block_scalar`, `flow_pair`, `block_mapping_pair`) with a throwaway harness to verify claims that aren't covered by the crate's own tests. The overwhelming majority of the new doc comments in `harper-yaml` (`is_prose_scalar`, `strip_block_scalar_indicator`, `is_mapping_key`, the `Mask::FromIterator` overlap-panic claim, the coalescing-guard rationale) are accurate and verified against actual tree-sitter node spans and passing tests.
+
+Two real contradictions found:
+
+**1. Docs claim harper-ls recognizes LSP language ID `yml`, but the code only matches `yaml`.**
+
+- Comment/doc text: `packages/web/src/routes/docs/integrations/language-server/+page.md:317`
+  ```
+  | YAML                |         `yaml`/`yml`          |               |
+  ```
+  This is the "Language ID" column of the `harper-ls` supported-languages table (the column documents the LSP `textDocument.languageId` string the client sends, matching the pattern of other rows like `Plain Text | `plaintext`/`text`` and `Literate Haskell | `lhaskell`/`literate haskell``, which correspond directly to real match arms).
+- Conflicting code: `harper-ls/src/backend.rs:403`
+  ```rust
+  "yaml" =&gt; Some(Box::new(YamlParser::default())),
+  ```
+  This is the only arm; there is no `"yml"` alternative. `update_document`'s `language_id` comes solely from the client-sent `textDocument.languageId` (set once from `did_open`'s `params.text_document.language_id`, `backend.rs:589`) — there is no file-extension-based fallback in `harper-ls` (calls like `update_document_from_file(&amp;file_uri, None)` at lines 698/719/750/829 pass `None` and only work because a prior `did_open` already cached the language_id). `.yml` is a real, working file extension for `harper-cli`'s standalone linting (`harper-cli/src/input/single_input.rs:150`, `Some("yaml") | Some("yml") =&gt; Box::new(YamlParser::default())`) and is consistent with `packages/vscode-plugin/package.json`'s new activation event (`onLanguage:yaml` only, no `yml`) — but that's a CLI file-extension concept, not an LSP language ID. The PR's own new doc row conflates the two, claiming `harper-ls` will recognize a `yml` languageId it never checks for.
+
+**2. `DedentLines` doc comment claims `LineWise` is currently shared with other per-line parsers, but in this PR it has exactly one caller.**
+
+- Comment text: `harper-yaml/src/dedent.rs:16-18`
+  ```
+  /// The actual line-splitting/stitching mechanism is shared with other
+  /// per-line parsers (see `harper_core::parsers::LineWise`); this type
+  /// only supplies the YAML-specific "strip" policy (trim whitespace).
+  ```
+- Conflicting code reality: `git diff master...feature/yaml-support-design -- harper-comments/src/comment_parsers/{unit,lua,solidity}.rs` is empty — none of those files are touched by this PR, and a repo-wide grep for `LineWise` (excluding an unrelated scratch worktree under `.claude/worktrees/` that isn't part of this branch/PR) shows its only consumer is `DedentLines` in `harper-yaml/src/dedent.rs`. `Unit` (`harper-comments/src/comment_parsers/unit.rs:28-64`) still has its own separate, hand-rolled per-line splitting loop, not `LineWise`. So as submitted, `LineWise` is a brand-new single-use combinator, not something "shared with other per-line parsers" — the comment describes a not-yet-merged future state (there's evidence elsewhere on disk of exactly that follow-up refactor being worked on separately), not what this PR's code actually does.
+
+No other contradictions found. Specifically verified as accurate (not flagged): the `Mask::FromIterator` overlap-panic description in `harper-yaml/src/lib.rs:822-828` against `harper-core/src/mask/mod.rs:34-37`; the block-scalar-header-stripping logic in `harper-yaml/src/heuristics.rs` against actual `tree-sitter-yaml` `block_scalar` node spans (confirmed the header line `|`/`&gt;` is included in the node's byte range); `is_mapping_key`'s claim about `block_mapping_pair`/`flow_pair` and the `key` field for explicit-key syntax (confirmed both node kinds and the field lookup work as described, and the crate's own regression test `excludes_explicit_key_from_lint_pass` passes); and the "double space" formatting-rule rationale in `dedent.rs:8-14` against `harper-core/src/linting/spaces.rs` (`Space(count&gt;1)` really does produce that lint).</result>
+<usage><subagent_tokens>132893</subagent_tokens><tool_uses>41</tool_uses><duration_ms>644698</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a4148e3b87dc8a1b8</task-id>
+<tool-use-id>toolu_01ToEQZDyxptHGraxpkG76BJ</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/a4148e3b87dc8a1b8.output</output-file>
+<status>completed</status>
+<summary>Agent "Score issue A confidence" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Score: 35**
+
+Justification: Commit d2650120 is confirmed to be in PR #3757 and does touch unrelated files (regionalisms.rs and mac_broker/mod.rs). However, AGENT_POLICY.md uses advisory language ("Try to break down the problem") rather than a hard mandate. More importantly, the commit message itself explicitly documents the bundling as necessary to unblock CI (failing on master since 2026-07-05) and is transparent about its lack of relation to YAML work. A senior engineer would likely view this as a common and defensible practice—bundling a CI-blocking toolchain drift fix rather than splitting it—rather than a policy violation worth flagging.</result>
+<usage><subagent_tokens>36858</subagent_tokens><tool_uses>4</tool_uses><duration_ms>33650</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>afcb1463982fce4cc</task-id>
+<tool-use-id>toolu_011yaGLRdcKuo4rZLF7WJ4hw</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/afcb1463982fce4cc.output</output-file>
+<status>completed</status>
+<summary>Agent "Score issue C confidence" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**60**
+
+The issue is real and well-founded. The comment in `harper-yaml/src/dedent.rs` (lines 16-17) claims the line-splitting mechanism is "shared with other per-line parsers" using present tense, but on this PR branch, `LineWise` has exactly one actual caller: `DedentLines` itself. The three parsers mentioned (unit, lua, solidity) remain unchanged and still use hand-rolled per-line logic. The grep confirms: only `harper-yaml/src/dedent.rs` instantiates `LineWise::new()` on this branch; the worktree evidence shows the migration of those parsers exists only in PR #3909. This is a genuine comment-to-code mismatch—the documentation describes an aspirational future state rather than current reality. Given Rod's emphasis on honesty and precision in CLAUDE.md, a reviewer would likely flag this for rewording to clarify that LineWise is designed for this shared pattern but currently has only one caller. It's not a functional bug, making it a solid 50-75 range issue—meaningful but not blocking.</result>
+<usage><subagent_tokens>39267</subagent_tokens><tool_uses>4</tool_uses><duration_ms>60950</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>a0482d7ae15c6d1bc</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-rod-build-harper/f3aa41be-8f5e-4f4d-909e-4afc58202c0c/tasks/a0482d7ae15c6d1bc.output</output-file>
+<status>completed</status>
+<summary>Agent "Score issue B confidence" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Based on my investigation of the local repository, I can now provide a confidence score for this issue.
+
+## Findings
+
+**Documentation claim (verified):**
+Line 317 of `/Users/rod/build/harper/packages/web/src/routes/docs/integrations/language-server/+page.md` lists YAML as `yaml/yml`, explicitly claiming support for both language IDs.
+
+**Code reality (verified):**
+Line 403 of `harper-ls/src/backend.rs` only contains:
+```
+"yaml" =&gt; Some(Box::new(YamlParser::default())),
+```
+There is no `"yml"` match arm. When harper-ls receives `languageId: "yml"` from an LSP client, it finds no matching parser and silently removes the document from linting (line 409).
+
+**Pattern consistency (verified):**
+All other language IDs with the "id1/id2" slash convention in the docs ARE fully matched in the code:
+- `git-commit`/`gitcommit` → Line 365: `"git-commit" | "gitcommit" | ...`
+- `jj-commit`/`jjdescription` → Line 371: `"jj-commit" | "jjdescription" =&gt;`
+- `lhaskell`/`literate haskell` → Line 374: `"lhaskell" | "literate haskell" =&gt;`
+- `plaintext`/`text` → Line 399: `"plaintext" | "text" =&gt;`
+- `tex`/`plaintex`/`latex` → Line 402: `"tex" | "plaintex" | "latex" =&gt;`
+
+YAML is the only exception where the docs claim both but code implements only one.
+
+**Additional context:**
+- `harper-cli` handles both `.yaml` and `.yml` file extensions (line 150 of `harper-cli/src/input/single_input.rs`)
+- The VS Code plugin only activates on `onLanguage:yaml` (line 76 of package.json), not `yml`
+- This bug was introduced in the original YAML support commit (commit 4411588a claimed `yaml/yml` support but code only had `yaml`)
+
+---
+
+**Score: 70**
+
+This is a real, verifiable documentation bug where the docs overclaim functionality that the code doesn't provide. It's highly inconsistent with all other slash-separated language IDs in the same table, which all have both variants implemented. The issue clearly demonstrates the discrepancy. However, the score is not higher (75+) because I cannot directly confirm whether common LSP clients actually send `yml` as a language ID in practice—though the pattern suggests someone anticipated it as a real possibility.</result>
+<usage><subagent_tokens>70416</subagent_tokens><tool_uses>18</tool_uses><duration_ms>104731</duration_ms></usage>
+</task-notification>
+
+---
+
+Investigate claim 2.  Then you can either fix the docs, or backend.rs.
