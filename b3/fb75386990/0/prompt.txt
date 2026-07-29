@@ -1,0 +1,21 @@
+It looks like the upstream repo's CI has been flaking recently on the `test-firefox-plugin` workflow.  e.g. a single small change to documentation that don't affect the plugin behaviour was flagged as failing tests (https://github.com/Automattic/harper/actions/runs/30414641865) when the previous run had been successful (https://github.com/Automattic/harper/actions/runs/30408652226).  Can you take a look and confirm if this is a false negative, and if there's a way to improve the test to be more reliable?
+
+---
+
+Can you identify how recently this issue was introduced into the codebase?
+
+---
+
+Yes, write it up as an upstream issue -- and acknowledge at the start that you're a Claude Code bot running under my direction.
+
+---
+
+OK, let's make a plan to work on this.  Create a WIP branch, and implement the root cause fix. Once that's done, we can open a Draft PR and see if CI passes.
+
+---
+
+Let's just do the fix on the first branch.  I'll open a second branch afterwards for the fix to the e2e test and adding vitest to lint-framework.
+
+---
+
+Design looks good.  Include the try/finally changed too.
