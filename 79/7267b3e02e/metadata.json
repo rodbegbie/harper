@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "797267b3e02e",
+  "strategy": "manual-commit",
+  "branch": "test/3911-ignore-suggestion-coverage",
+  "checkpoints_count": 7,
+  "files_touched": [
+    "packages/chrome-plugin/tests/testUtils.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/79/7267b3e02e/0/metadata.json",
+      "transcript": "/79/7267b3e02e/0/full.jsonl",
+      "compact_transcript": "/79/7267b3e02e/0/transcript.jsonl",
+      "content_hash": "/79/7267b3e02e/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 18,
+    "cache_creation_tokens": 8967,
+    "cache_read_tokens": 3565036,
+    "output_tokens": 6697,
+    "api_call_count": 10
+  }
+}
