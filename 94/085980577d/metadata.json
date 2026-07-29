@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "94085980577d",
+  "strategy": "manual-commit",
+  "branch": "test/3911-ignore-suggestion-coverage",
+  "checkpoints_count": 7,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/94/085980577d/0/metadata.json",
+      "transcript": "/94/085980577d/0/full.jsonl",
+      "compact_transcript": "/94/085980577d/0/transcript.jsonl",
+      "content_hash": "/94/085980577d/0/content_hash.txt",
+      "prompt": "/94/085980577d/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 384,
+    "cache_creation_tokens": 514239,
+    "cache_read_tokens": 56209951,
+    "output_tokens": 171952,
+    "api_call_count": 200
+  }
+}
